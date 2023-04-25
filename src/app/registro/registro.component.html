@@ -1,0 +1,64 @@
+<div class="fondo">
+  <div class="contenedor-formulario rounded">
+    <h1>Registro</h1>
+    <form action="">
+      <div class="p-inputgroup mt-4">
+        <span class="p-inputgroup-addon">
+          <i class="pi pi-user"></i>
+        </span>
+        <input pInputText placeholder="Nombre(s)" class="mr-2"/>
+        <input pInputText placeholder="Apellido paterno" class="mr-2"/>
+        <input pInputText placeholder="Apellido materno" class="mr-2"/>
+      </div>
+      <div class="p-inputgroup mt-4">
+        <span class="p-inputgroup-addon">
+          <i class="pi pi-calendar"></i>
+        </span>
+        <p-calendar placeholder="Fecha nacimiento"></p-calendar>
+        <div class="d-flex justify-content-center align-items-center">
+          <label for="Sexo">Sexo: </label>
+        <mat-radio-group aria-label="Selecciona una opcion" class="sexo d-flex justify-content-center align-items-center">
+          <mat-radio-button value="1">Hombre</mat-radio-button>
+          <mat-radio-button value="2">Mujer</mat-radio-button>
+          <mat-radio-button value="3">Otro</mat-radio-button>
+        </mat-radio-group>
+        </div>
+      </div>
+      <div class="p-inputgroup mt-4">
+        <span class="p-inputgroup-addon">
+          <i class="pi pi-phone"></i>
+        </span>
+        <input pInputText placeholder="Telefono" />
+        <input pInputText placeholder="Celular" />
+      </div>
+      <div class="p-inputgroup mt-4">
+        <span class="p-inputgroup-addon">
+          <i class="pi pi-envelope"></i>
+        </span>
+        <input pInputText placeholder="Email" />
+      </div>
+      <div class="p-inputgroup mt-4">
+        <p>Direccion</p>
+      </div>
+      <div class="p-inputgroup mt-4">
+        <span class="p-inputgroup-addon">
+          <i class="pi pi-home"></i>
+        </span>
+        <input pInputText placeholder="Calle" />
+        <input pInputText placeholder="Numero" />
+        <input pInputText placeholder="Colonia" />
+      </div>
+      <div class="p-inputgroup mt-4">
+        <span class="p-inputgroup-addon">
+          <i class="pi pi-home"></i>
+        </span>
+        <input pInputText placeholder="Codigo postal" />
+        <input pInputText placeholder="Municipio" />
+        <input pInputText placeholder="Estado" />
+      </div>
+      <div class="p-inputgroup mt-4 d-flex justify-content-center align-items-center">
+        <button mat-flat-button color="primary" class="btn-login">Registrar</button>
+      </div>
+    </form>
+  </div>
+</div>

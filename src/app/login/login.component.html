@@ -7,17 +7,17 @@
       <h1>Sistema de Citas</h1>
       <nav>
         <ul class="nav">
-          <li class="nav-item m-3"><a href="#" class="nav-link active rounded paciente">Paciente</a></li>
-          <li class="nav-item m-3"><a href="#" class="nav-link active rounded personal">Personal</a></li>
+          <li class="nav-item m-3"><a class="nav-link active rounded {{pacienteEnable}}" (click)="loginPaciente()">Paciente</a></li>
+          <li class="nav-item m-3"><a class="nav-link active rounded {{personalEnable}}" (click)="loginPersonal()">Personal</a></li>
         </ul>
       </nav>
       <label for="usuario" class="mt-3">Usuario</label>
       <input type="text" pInputText formControlName="text" name="usuario" id="usuario">
       <label for="contrasenia" class="mt-3">Contraseña</label>
       <p-password [feedback]="false"></p-password> <!--[(ngModel)]="value"-->
-      <button mat-flat-button color="primary" class="mt-3 mb-3">Iniciar Sesion</button>
-      <a href="">¿Perdiste tu contraseña?</a>
-      <a href="">¿No tienes Cuenta? Registrate</a>
+      <button mat-flat-button color="primary" class="mt-3 mb-3 btn-login">Iniciar Sesion</button>
+      <a href="">Recuperar contraseña</a>
+      <p>¿No tienes Cuenta? <a href="registro">Registrate</a></p>
     </form>
   </div>
 </div>

@@ -7,4 +7,16 @@ import { Component } from '@angular/core';
 })
 export class LoginComponent {
 
+  pacienteEnable = 'activado';
+  personalEnable = 'desactivado';
+
+  loginPaciente(){
+    this.pacienteEnable = 'activado';
+    this.personalEnable = 'desactivado';
+  }
+
+  loginPersonal(){
+    this.pacienteEnable = 'desactivado';
+    this.personalEnable = 'activado';
+  }
 }

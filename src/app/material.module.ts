@@ -4,9 +4,11 @@ import { NgModule } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
 
 //AngularMaterial
 import {MatButtonModule} from '@angular/material/button';
+import {MatRadioModule} from '@angular/material/radio';
 
 
 @NgModule({
@@ -15,12 +17,16 @@ import {MatButtonModule} from '@angular/material/button';
     PasswordModule,
     ButtonModule,
     MatButtonModule,
+    MatRadioModule,
+    CalendarModule,
   ],
   exports: [
     InputTextModule,
     PasswordModule,
     ButtonModule,
     MatButtonModule,
+    MatRadioModule,
+    CalendarModule,
   ],
 })
 export class MaterialModule {}

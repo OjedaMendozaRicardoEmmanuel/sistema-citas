@@ -1,0 +1,44 @@
+.fondo {
+  position: relative;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background-color: #DCD6F7;
+  align-items: center;
+  justify-content: center;
+  color: #424874;
+}
+
+.contenedor-formulario {
+  position: relative;
+  width: 70%;
+  height: 80%;
+  display: flex;
+  background-color: white;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+form{
+  position: relative;
+  height: 85%;
+  width: 50%;
+  overflow: scroll;
+}
+
+span{
+  background-color: #424874;
+}
+
+i{
+  color: white;
+}
+
+label, p{
+  font-weight: bold;
+  font-size: 18px;
+}
+
+
