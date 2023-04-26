@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PanelComponent implements OnInit{
   modulo = '<app-inicio></app-inicio>';
-  imgPerfil = '../assets/login/perfil.png';
+  imgPerfil = '../assets/img/perfil.png';
   user = 'Ricardo';
   tipoUsuario:string = 'admin'
 
