@@ -6,16 +6,29 @@
     </div>
     <div class="modulos">
       <ul>
-        <li *ngFor="let item of modulosAdmin"><button class="{{item.estado}}">
+        <li *ngFor="let item of modulos"><button class="{{item.estado}}" (click)="botonPresionado(item.id)">
           <i class="{{item.icon}}"></i>
           {{item.nombre}}
         </button></li>
       </ul>
+      <button class="position-absolute bottom-0 end-0 salir" (click)="cerrarSesion()">
+        <i class="bi bi-arrow-bar-left"></i>
+        Cerrar Sesion
+      </button>
     </div>
   </aside>
   <main>
     <div>
-      <app-inicio></app-inicio>
+      <app-inicio *ngIf="moduloEnable===1"></app-inicio>
+      <app-personal *ngIf="moduloEnable===2"></app-personal>
+      <app-odontologos *ngIf="moduloEnable===3"></app-odontologos>
+      <app-pacientes *ngIf="moduloEnable===4"></app-pacientes>
+      <app-gestion-citas *ngIf="moduloEnable===5"></app-gestion-citas>
+      <app-reportes *ngIf="moduloEnable===6"></app-reportes>
+      <app-citas *ngIf="moduloEnable===7"></app-citas>
+      <app-historial *ngIf="moduloEnable===8"></app-historial>
+      <app-pagos *ngIf="moduloEnable===9"></app-pagos>
+      <app-ajustes *ngIf="moduloEnable===10"></app-ajustes>
     </div>
   </main>
 </div>

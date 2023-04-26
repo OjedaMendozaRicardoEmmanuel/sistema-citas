@@ -11,10 +11,12 @@ export class LoginComponent implements OnInit {
   masterkey = {
     usuario: 'sysdba',
     contrasenia: 'masterkey',
+    rol:'admin'
   };
   usuario = {
     usuario: '',
     contrasenia: '',
+    rol:''
   };
 
   constructor() {

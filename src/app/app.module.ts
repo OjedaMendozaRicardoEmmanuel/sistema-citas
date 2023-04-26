@@ -18,6 +18,7 @@ import { PanelComponent } from './panel/panel.component';
 import { PersonalComponent } from './modulos/personal/personal.component';
 import { AjustesComponent } from './modulos/ajustes/ajustes.component';
 import { GestionCitasComponent } from './modulos/gestion-citas/gestion-citas.component';
+import { ReportesComponent } from './modulos/reportes/reportes.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { GestionCitasComponent } from './modulos/gestion-citas/gestion-citas.com
     PersonalComponent,
     AjustesComponent,
     GestionCitasComponent,
+    ReportesComponent,
   ],
   imports: [
     BrowserModule,
