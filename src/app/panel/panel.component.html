@@ -1,1 +1,21 @@
-<p>panel works!</p>
+<div class="fondo">
+  <aside class="panel d-flex justify-content-center flex-column">
+    <div class="div-user d-flex justify-content-center">
+      <img src="{{imgPerfil}}" alt="">
+      <p>Bienvenido {{user}}</p>
+    </div>
+    <div class="modulos">
+      <ul>
+        <li *ngFor="let item of modulosPaciente"><button>
+          <i class="{{item.icon}}"></i>
+          {{item.nombre}}
+        </button></li>
+      </ul>
+    </div>
+  </aside>
+  <main>
+    <div>
+      <app-inicio></app-inicio>
+    </div>
+  </main>
+</div>

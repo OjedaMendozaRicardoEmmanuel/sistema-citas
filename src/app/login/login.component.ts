@@ -35,6 +35,7 @@ export class LoginComponent implements OnInit {
         this.masterkey.contrasenia === this.form.value.contrasenia
       ) {
         console.log('Usuario admin');
+        window.location.href='panel';
       }
     }
   }

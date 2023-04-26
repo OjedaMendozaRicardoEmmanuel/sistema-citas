@@ -1,0 +1,76 @@
+.fondo {
+  position: relative;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background-color: #DCD6F7;
+  align-items: center;
+  justify-content: center;
+  color: #424874;
+}
+
+.panel {
+  position: relative;
+  width: 15%;
+  height: 100%;
+  background-color: #424874;
+  border: 1px solid #424874;
+}
+
+main{
+  width: 85%;
+  height: 100%;
+}
+
+.div-user {
+  width: 100%;
+  height: 20%;
+  background-color: white;
+  border-bottom: 1px solid #424874;
+}
+
+.modulos {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 80%;
+  color: #DCD6F7;
+}
+
+.modulos ul {
+  position: relative;
+  list-style: none;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.modulos ul li{
+  position: relative;
+  width: 100%;
+  height: 12%;
+}
+
+.modulos ul li button{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #424874;
+  border: none;
+  border-bottom: 1px solid #DCD6F7;
+  color: #DCD6F7;
+  text-align: left;
+  padding: 10px;
+  font-size: 18px;
+}
+
+.modulos ul li button:hover{
+  background-color: #DCD6F7;
+  color: #424874;
+}
+
+.modulos ul li button i{
+  font-size: 30px;
+  margin-right: 10px;
+}

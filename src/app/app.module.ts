@@ -12,9 +12,12 @@ import { InicioComponent } from './modulos/inicio/inicio.component';
 import { PacientesComponent } from './modulos/pacientes/pacientes.component';
 import { OdontologosComponent } from './modulos/odontologos/odontologos.component';
 import { CitasComponent } from './modulos/citas/citas.component';
-import { PagosComponent } from './pagos/pagos.component';
-import { HistorialComponent } from './historial/historial.component';
+import { PagosComponent } from './modulos/pagos/pagos.component';
+import { HistorialComponent } from './modulos/historial/historial.component';
 import { PanelComponent } from './panel/panel.component';
+import { PersonalComponent } from './modulos/personal/personal.component';
+import { AjustesComponent } from './modulos/ajustes/ajustes.component';
+import { GestionCitasComponent } from './modulos/gestion-citas/gestion-citas.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +31,9 @@ import { PanelComponent } from './panel/panel.component';
     PagosComponent,
     HistorialComponent,
     PanelComponent,
+    PersonalComponent,
+    AjustesComponent,
+    GestionCitasComponent,
   ],
   imports: [
     BrowserModule,
