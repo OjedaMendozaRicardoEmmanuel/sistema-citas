@@ -6,7 +6,7 @@
     </div>
     <div class="modulos">
       <ul>
-        <li *ngFor="let item of modulosAdmin"><button>
+        <li *ngFor="let item of modulosAdmin"><button class="{{item.estado}}">
           <i class="{{item.icon}}"></i>
           {{item.nombre}}
         </button></li>

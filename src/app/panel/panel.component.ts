@@ -12,26 +12,26 @@ export class PanelComponent implements OnInit{
   tipoUsuario:string = 'admin'
 
   modulosAdmin= [
-    {nombre:'Inicio',icon:'bi bi-house-door-fill'},
-    {nombre:'Personal',icon:'bi bi-person-fill'},
-    {nombre:'Odontologos',icon:'bi bi-person-badge-fill'},
-    {nombre:'Pacientes',icon:'bi bi-people-fill'},
-    {nombre:'Ajustes',icon:'bi bi-gear-fill'},
+    {nombre:'Inicio',icon:'bi bi-house-door-fill',estado:'activado'},
+    {nombre:'Personal',icon:'bi bi-person-fill',estado:'desactivado'},
+    {nombre:'Odontologos',icon:'bi bi-person-badge-fill',estado:'desactivado'},
+    {nombre:'Pacientes',icon:'bi bi-people-fill',estado:'desactivado'},
+    {nombre:'Ajustes',icon:'bi bi-gear-fill',estado:'desactivado'},
   ];
 
   modulosPersonal= [
-    {nombre:'Inicio',icon:'bi bi-house-door-fill'},
-    {nombre:'Gestionar Citas',icon:'bi bi-calendar-date-fill'},
-    {nombre:'Reportes',icon:'bi bi-file-earmark-arrow-down-fill'},
-    {nombre:'Ajustes',icon:'bi bi-gear-fill'},
+    {nombre:'Inicio',icon:'bi bi-house-door-fill',estado:'activado'},
+    {nombre:'Gestionar Citas',icon:'bi bi-calendar-date-fill',estado:'desactivado'},
+    {nombre:'Reportes',icon:'bi bi-file-earmark-arrow-down-fill',estado:'desactivado'},
+    {nombre:'Ajustes',icon:'bi bi-gear-fill',estado:'desactivado'},
   ];
 
   modulosPaciente= [
-    {nombre:'Inicio',icon:'bi bi-house-door-fill'},
-    {nombre:'Citas',icon:'bi bi-calendar-date-fill'},
-    {nombre:'Historial',icon:'bi bi-clock-fill'},
-    {nombre:'Pagos',icon:'bi bi-credit-card-2-back-fill'},
-    {nombre:'Ajustes',icon:'bi bi-gear-fill'},
+    {nombre:'Inicio',icon:'bi bi-house-door-fill',estado:'activado'},
+    {nombre:'Citas',icon:'bi bi-calendar-date-fill',estado:'desactivado'},
+    {nombre:'Historial',icon:'bi bi-clock-fill',estado:'desactivado'},
+    {nombre:'Pagos',icon:'bi bi-credit-card-2-back-fill',estado:'desactivado'},
+    {nombre:'Ajustes',icon:'bi bi-gear-fill',estado:'desactivado'},
   ];
 
 
@@ -39,5 +39,6 @@ export class PanelComponent implements OnInit{
   ngOnInit(): void {
 
   }
+
 
 }
