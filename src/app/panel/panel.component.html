@@ -18,17 +18,17 @@
     </div>
   </aside>
   <main>
-    <div>
-      <app-inicio *ngIf="moduloEnable===1"></app-inicio>
-      <app-personal *ngIf="moduloEnable===2"></app-personal>
-      <app-odontologos *ngIf="moduloEnable===3"></app-odontologos>
-      <app-pacientes *ngIf="moduloEnable===4"></app-pacientes>
-      <app-gestion-citas *ngIf="moduloEnable===5"></app-gestion-citas>
-      <app-reportes *ngIf="moduloEnable===6"></app-reportes>
-      <app-citas *ngIf="moduloEnable===7"></app-citas>
-      <app-historial *ngIf="moduloEnable===8"></app-historial>
-      <app-pagos *ngIf="moduloEnable===9"></app-pagos>
-      <app-ajustes *ngIf="moduloEnable===10"></app-ajustes>
+    <div class="div-modulo d-flex">
+      <app-inicio *ngIf="moduloEnable===1" class="modulo-activo"></app-inicio>
+      <app-personal *ngIf="moduloEnable===2" class="modulo-activo"></app-personal>
+      <app-odontologos *ngIf="moduloEnable===3" class="modulo-activo"></app-odontologos>
+      <app-pacientes *ngIf="moduloEnable===4" class="modulo-activo"></app-pacientes>
+      <app-gestion-citas *ngIf="moduloEnable===5" class="modulo-activo"></app-gestion-citas>
+      <app-reportes *ngIf="moduloEnable===6" class="modulo-activo"></app-reportes>
+      <app-citas *ngIf="moduloEnable===7" class="modulo-activo"></app-citas>
+      <app-historial *ngIf="moduloEnable===8" class="modulo-activo"></app-historial>
+      <app-pagos *ngIf="moduloEnable===9" class="modulo-activo"></app-pagos>
+      <app-ajustes *ngIf="moduloEnable===10" class="modulo-activo"></app-ajustes>
     </div>
   </main>
 </div>

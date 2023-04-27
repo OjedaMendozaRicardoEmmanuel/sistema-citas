@@ -19,6 +19,7 @@ import { PersonalComponent } from './modulos/personal/personal.component';
 import { AjustesComponent } from './modulos/ajustes/ajustes.component';
 import { GestionCitasComponent } from './modulos/gestion-citas/gestion-citas.component';
 import { ReportesComponent } from './modulos/reportes/reportes.component';
+import { CompartirDatosService } from './services/compartir-datos.service';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,7 @@ import { ReportesComponent } from './modulos/reportes/reportes.component';
     ReactiveFormsModule,
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [CompartirDatosService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

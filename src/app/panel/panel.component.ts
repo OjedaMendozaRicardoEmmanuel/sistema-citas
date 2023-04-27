@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { CompartirDatosService } from '../services/compartir-datos.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-panel',
@@ -8,9 +11,10 @@ import { Component, OnInit } from '@angular/core';
 export class PanelComponent implements OnInit{
   imgPerfil = '../assets/img/perfil.png';
   user = 'Ricardo';
-  tipoUsuario:string = 'odontologo'
+  tipoUsuario:string = ''
   modulos:any = [];
   moduloEnable = 1;
+  usuario:any = {usuario:'',contrasenia:'',rol:''};
 
   permisos = [
     {id:1,nombre:'Inicio',icon:'bi bi-house-door-fill',estado:'activado',rol:'all'},
@@ -25,7 +29,12 @@ export class PanelComponent implements OnInit{
     {id:10,nombre:'Ajustes',icon:'bi bi-gear-fill',estado:'desactivado',rol:'all'},
   ];
 
-
+  constructor(private compartirDatos: CompartirDatosService, private router: Router) {
+    console.log(this.compartirDatos);
+    this.usuario=compartirDatos.getUser();
+    this.tipoUsuario = this.usuario.rol;
+    this.user = this.usuario.usuario;
+  }
 
   ngOnInit(): void {
     this.modulosActivos();
@@ -58,6 +67,7 @@ export class PanelComponent implements OnInit{
   }
 
   cerrarSesion(){
-    window.location.href='login';
+    this.compartirDatos.setUser([]);
+    this.router.navigate([`login`]);
   }
 }
