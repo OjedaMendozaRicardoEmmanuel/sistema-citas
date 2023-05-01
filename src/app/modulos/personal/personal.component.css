@@ -1,0 +1,23 @@
+.fondo {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #DCD6F7;
+}
+
+p-toolbar {
+  width: 90%;
+  height: 10%;
+}
+
+.card {
+  position: relative;
+  width: 90%;
+  height: 80%;
+  background-color: white;
+}
+
+p-table {
+  width: 95%;
+  height: 95%;
+}

@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class PanelComponent implements OnInit{
   imgPerfil = '../assets/img/perfil.png';
   user = 'Ricardo';
-  tipoUsuario:string = ''
+  tipoUsuario:string = 'admin'
   modulos:any = [];
   moduloEnable = 1;
   usuario:any = {usuario:'',contrasenia:'',rol:''};
@@ -31,9 +31,9 @@ export class PanelComponent implements OnInit{
 
   constructor(private compartirDatos: CompartirDatosService, private router: Router) {
     console.log(this.compartirDatos);
-    this.usuario=compartirDatos.getUser();
-    this.tipoUsuario = this.usuario.rol;
-    this.user = this.usuario.usuario;
+    // this.usuario=compartirDatos.getUser();
+    // this.tipoUsuario = this.usuario.rol;
+    // this.user = this.usuario.usuario;
   }
 
   ngOnInit(): void {

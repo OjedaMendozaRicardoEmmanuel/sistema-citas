@@ -5,6 +5,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
+import { ToolbarModule } from 'primeng/toolbar';
+import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
 
 //AngularMaterial
 import {MatButtonModule} from '@angular/material/button';
@@ -14,7 +18,6 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import { AppComponent } from './app.component';
 
 
 @NgModule({
@@ -31,6 +34,10 @@ import { AppComponent } from './app.component';
     MatTableModule,
     MatIconModule,
     MatButtonModule,
+    ToolbarModule,
+    TableModule,
+    ToastModule,
+    DialogModule,
   ],
   exports: [
     InputTextModule,
@@ -45,6 +52,10 @@ import { AppComponent } from './app.component';
     MatTableModule,
     MatIconModule,
     MatButtonModule,
+    ToolbarModule,
+    TableModule,
+    ToastModule,
+    DialogModule,
   ],
 })
 export class MaterialModule {}

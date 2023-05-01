@@ -1,37 +1,49 @@
-<table mat-table [dataSource]="dataSource">
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef>Id</th>
-    <td mat-cell *matCellDef="let usuario">{{usuario.id}}</td>
-  </ng-container>
+<div class="d-flex justify-content-center align-items-center fondo flex-column">
+  <p-toolbar class="mb-5 shadow">
+    <div class="p-toolbar-group-start">
+      <p-button label="Agregar" icon="pi pi-plus" class="mr-2" (onClick)="agregarUsuario()"></p-button>
+    </div>
+    <div class="p-toolbar-group-end">
+      <div class="p-inputgroup">
+        <input type="text" pInputText placeholder="Buscar" />
+        <button type="button" pButton icon="pi pi-search" styleClass="p-button-danger"></button>
+      </div>
+    </div>
+  </p-toolbar>
 
-  <ng-container matColumnDef="nombre">
-    <th mat-header-cell *matHeaderCellDef>Nombre</th>
-    <td mat-cell *matCellDef="let usuario">{{usuario.nombre}}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="email">
-    <th mat-header-cell *matHeaderCellDef>Email</th>
-    <td mat-cell *matCellDef="let usuario">{{usuario.email}}</td>
-  </ng-container>
-
-  <ng-container matColumnDef="editar">
-    <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let usuario">
-      <button mat-icon-button (click)="editarUsuario(usuario.id)">
-        <mat-icon>edit</mat-icon>
-      </button>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="eliminar">
-    <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let usuario">
-      <button mat-icon-button (click)="eliminarUsuario(usuario.id)">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-</table>
+  <div class="card rounded d-flex justify-content-center align-items-center shadow">
+    <p-toast position="top-right" class="rounded"></p-toast>
+    <p-table [value]="dataSource" [tableStyle]="{ 'min-width': '50rem' }">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th style="width: 3rem"></th>
+          <th style="width: 3rem"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-personal>
+        <tr>
+          <td>{{ personal.id }}</td>
+          <td>{{ personal.nombre }}</td>
+          <td>{{ personal.email }}</td>
+          <td>
+            <button type="button" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+              (click)="editarUsuario(personal)"></button>
+          </td>
+          <td>
+            <button type="button" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+              (click)="eliminarUsuario(personal)"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <p-dialog [(visible)]="agregarDialog" [style]="{width: '70%', height: '80%'}" header="Agregar Personal" [modal]="true" class="p-fluid">
+    <app-registro></app-registro>
+  </p-dialog>
+  <p-dialog [(visible)]="modificarDialog" [style]="{width: '70%', height: '80%'}" header="Modificar Personal" [modal]="true" class="p-fluid">
+    <app-registro></app-registro>
+  </p-dialog>
+</div>
