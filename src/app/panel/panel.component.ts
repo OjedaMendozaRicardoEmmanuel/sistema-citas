@@ -31,9 +31,9 @@ export class PanelComponent implements OnInit{
 
   constructor(private compartirDatos: CompartirDatosService, private router: Router) {
     console.log(this.compartirDatos);
-    // this.usuario=compartirDatos.getUser();
-    // this.tipoUsuario = this.usuario.rol;
-    // this.user = this.usuario.usuario;
+    this.usuario=compartirDatos.getUser();
+    this.tipoUsuario = this.usuario.rol;
+    this.user = this.usuario.usuario;
   }
 
   ngOnInit(): void {
