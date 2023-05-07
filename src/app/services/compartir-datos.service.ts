@@ -62,9 +62,9 @@ export class CompartirDatosService {
 
     private pacientes: Paciente[] = [
       {
-        id: 'pac-001',
+        id: 'PX-001',
         nombre: 'Ana',
-        apellidos: 'López',
+        apellidos: 'López Perez',
         fecha_nacimiento: '1995-02-15',
         sexo: 'Femenino',
         telefono: '555-1111',
@@ -72,16 +72,15 @@ export class CompartirDatosService {
         estatus: true,
       },
       {
-        id: 'pac-002',
+        id: 'PX-002',
         nombre: 'Pedro',
-        apellidos: 'Gómez',
+        apellidos: 'Gómez Lopez',
         fecha_nacimiento: '1988-08-20',
         sexo: 'Masculino',
         telefono: '555-2222',
         email: 'pedro.gomez@example.com',
         estatus: true,
-      },
-    ];
+      },];
 
 
 
@@ -103,4 +102,69 @@ export class CompartirDatosService {
   }
 
 
+  getPersonal(): Personal[] {
+    return this.personal;
+  }
+
+  // Método para agregar personal
+  agregarPersonal(nuevoPersonal: Personal): void {
+    this.personal.push(nuevoPersonal);
+  }
+
+  // Método para modificar personal
+  modificarPersonal(id: string, datos: Partial<Personal>): void {
+    const index = this.personal.findIndex((p) => p.id === id);
+    if (index !== -1) {
+      this.personal[index] = { ...this.personal[index], ...datos };
+    }
+  }
+
+  // Método para eliminar personal
+  eliminarPersonal(id: string): void {
+    this.personal = this.personal.filter((p) => p.id !== id);
+  }
+
+  getOdontologos(): Odontologo[] {
+    return this.odontologos;
+  }
+
+  // Método para agregar odontólogo
+  agregarOdontologo(nuevoOdontologo: Odontologo): void {
+    this.odontologos.push(nuevoOdontologo);
+  }
+
+  // Método para modificar odontólogo
+  modificarOdontologo(id: string, datos: Partial<Odontologo>): void {
+    const index = this.odontologos.findIndex((o) => o.id === id);
+    if (index !== -1) {
+      this.odontologos[index] = { ...this.odontologos[index], ...datos };
+    }
+  }
+
+  // Método para eliminar odontólogo
+  eliminarOdontologo(id: string): void {
+    this.odontologos = this.odontologos.filter((o) => o.id !== id);
+  }
+
+  getPacientes(): Paciente[] {
+    return this.pacientes;
+  }
+
+  // Método para agregar paciente
+  agregarPaciente(nuevoPaciente: Paciente): void {
+    this.pacientes.push(nuevoPaciente);
+  }
+
+  // Método para modificar paciente
+  modificarPaciente(id: string, datos: Partial<Paciente>): void {
+    const index = this.pacientes.findIndex((p) => p.id === id);
+    if (index !== -1) {
+      this.pacientes[index] = { ...this.pacientes[index], ...datos };
+    }
+  }
+
+  // Método para eliminar paciente
+  eliminarPaciente(id: string): void {
+    this.pacientes = this.pacientes.filter((p) => p.id !== id);
+  }
 }
