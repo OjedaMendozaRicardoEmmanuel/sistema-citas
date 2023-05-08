@@ -18,6 +18,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { MatIconModule } from '@angular/material/icon';
     TableModule,
     ToastModule,
     DialogModule,
+    MatInputModule,
   ],
   exports: [
     InputTextModule,
@@ -56,6 +58,7 @@ import { MatIconModule } from '@angular/material/icon';
     TableModule,
     ToastModule,
     DialogModule,
+    MatInputModule,
   ],
 })
 export class MaterialModule {}

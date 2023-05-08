@@ -1,4 +1,4 @@
-export interface Personal {
+  export interface Personal {
   id: string
   nombre: string
   apellidos: string

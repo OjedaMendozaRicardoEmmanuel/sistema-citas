@@ -6,19 +6,21 @@
 }
 
 p-toolbar {
-  width: 90%;
+  width: 95%;
   height: 10%;
 }
 
 .card {
   position: relative;
-  width: 90%;
+  width: 95%;
   height: 80%;
   background-color: white;
 }
 
 p-table {
-  width: 95%;
-  height: 95%;
+  width: 98%;
+  height: 98%;
+  box-sizing: border-box;
+  overflow: auto;
 }
 

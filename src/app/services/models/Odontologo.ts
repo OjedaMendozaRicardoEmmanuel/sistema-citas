@@ -6,6 +6,6 @@ export interface Odontologo {
   sexo: string
   especialidad: string
   telefono: string
-  email: string
+  correo: string
   estatus: boolean
 }

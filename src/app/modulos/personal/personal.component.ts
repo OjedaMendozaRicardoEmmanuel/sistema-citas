@@ -1,19 +1,9 @@
 import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
-
-export interface Usuario {
-  id: number;
-  nombre: string;
-  email: string;
-}
-
-const USUARIOS_DATA: Usuario[] = [
-  { id: 1, nombre: 'Juan', email: 'juan@gmail.com' },
-  { id: 2, nombre: 'María', email: 'maria@hotmail.com' },
-  { id: 3, nombre: 'Pedro', email: 'pedro@yahoo.com' },
-  { id: 4, nombre: 'Jose', email: 'jose@@hotmail.com' },
-  { id: 5, nombre: 'Ricardo', email: 'ricardo@gmail.com' },
-];
+import { CompartirDatosService } from 'src/app/services/compartir-datos.service';
+import { Personal } from 'src/app/services/models/Personal';
+import * as moment from 'moment';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-personal',
@@ -22,40 +12,76 @@ const USUARIOS_DATA: Usuario[] = [
   providers: [MessageService],
 })
 export class PersonalComponent {
-  displayedColumns: string[] = ['id', 'nombre', 'email', 'editar', 'eliminar'];
-  dataSource = [
-    { id: 1, nombre: 'Juan', email: 'juan@gmail.com' },
-    { id: 2, nombre: 'María', email: 'maria@hotmail.com' },
-    { id: 3, nombre: 'Pedro', email: 'pedro@yahoo.com' },
-    { id: 4, nombre: 'Jose', email: 'jose@@hotmail.com' },
-    { id: 5, nombre: 'Ricardo', email: 'ricardo@gmail.com' },
-  ];
 
-  agregarDialog : boolean = false;
-  modificarDialog : boolean = false;
+  agregarDialog: boolean = false;
+  modificarDialog: boolean = false;
 
-  constructor(private messageService: MessageService) {}
+  personal: Personal[] = [];
+  formGroup: FormGroup;
+
+  constructor(
+    private messageService: MessageService,
+    private compartirDatos: CompartirDatosService
+  ) {
+    this.personal = compartirDatos.getPersonal();
+    this.formGroup = new FormGroup({
+      id:new FormControl('', [Validators.required]),
+      nombre:new FormControl('', [Validators.required]),
+      apellidos:new FormControl('', [Validators.required]),
+      fecha_nacimiento:new FormControl('', [Validators.required]),
+      sexo:new FormControl('', [Validators.required]),
+      telefono:new FormControl('', [Validators.required]),
+      correo:new FormControl('', [Validators.required]),
+      cargo:new FormControl('', [Validators.required]),
+      estatus:new FormControl('', [Validators.required]),
+    });
+  }
 
   agregarUsuario() {
     this.agregarDialog = true;
     console.log('dialog');
   }
 
-  editarUsuario(usuario: Usuario) {
-    this.modificarDialog = true;
-    console.log('dialog');
-    /*this.messageService.add({
-      severity: 'success',
-      summary: 'Se guardo correctamente ',
-      detail: usuario.nombre,
-    });*/
+  agregar() {
+    this.formGroup.get('id')?.setValue(this.getNextId(this.personal[this.personal.length-1].id));
+    console.log(this.formGroup.value);
+    this.compartirDatos.agregarPersonal(this.formGroup.value);
+    this.agregarDialog = false;
+    this.formGroup.reset();
   }
 
-  eliminarUsuario(usuario: Usuario) {
+  modificar(){
+    this.compartirDatos.modificarPersonal(this.formGroup.get('id')?.value, this.formGroup.value);
+    this.formGroup.reset();
+    this.modificarDialog = false;
+  }
+
+  getNextId(lastId: string): string {
+    const lastNum = parseInt(lastId.split('-')[1]);
+    const nextNum = lastNum + 1;
+    return `PER-${nextNum.toString().padStart(3, '0')}`;
+  }
+
+  editarUsuario(personal: Personal) {
+    this.formGroup.setValue(personal);
+    console.log(this.formGroup.value);
+    this.modificarDialog = true;
+    console.log('dialog');
+  }
+
+  eliminarUsuario(personal: Personal) {
+    this.compartirDatos.eliminarPersonal(personal.id);
+    this.personal = this.compartirDatos.getPersonal();
     this.messageService.add({
       severity: 'warn',
       summary: 'Eliminado correctamente',
-      detail: usuario.nombre,
+      detail: personal.nombre,
     });
+  }
+
+  calcularEdad(fechaNacimiento: string) {
+    const hoy = moment();
+    const edad = hoy.diff(fechaNacimiento, 'years');
+    return edad;
   }
 }

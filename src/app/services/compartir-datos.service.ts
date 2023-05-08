@@ -45,7 +45,7 @@ export class CompartirDatosService {
       sexo: 'Masculino',
       especialidad: 'Ortodoncia',
       telefono: '555-1234',
-      email: 'juan.perez@example.com',
+      correo: 'juan.perez@example.com',
       estatus: true,
     },
     {
@@ -56,7 +56,7 @@ export class CompartirDatosService {
       sexo: 'Femenino',
       especialidad: 'Endodoncia',
       telefono: '555-5678',
-      email: 'maria.garcia@example.com',
+      correo: 'maria.garcia@example.com',
       estatus: true,
     },];
 
@@ -68,7 +68,7 @@ export class CompartirDatosService {
         fecha_nacimiento: '1995-02-15',
         sexo: 'Femenino',
         telefono: '555-1111',
-        email: 'ana.lopez@example.com',
+        correo: 'ana.lopez@example.com',
         estatus: true,
       },
       {
@@ -78,7 +78,7 @@ export class CompartirDatosService {
         fecha_nacimiento: '1988-08-20',
         sexo: 'Masculino',
         telefono: '555-2222',
-        email: 'pedro.gomez@example.com',
+        correo: 'pedro.gomez@example.com',
         estatus: true,
       },];
 

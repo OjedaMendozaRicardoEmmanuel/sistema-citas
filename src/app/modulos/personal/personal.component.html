@@ -13,12 +13,19 @@
 
   <div class="card rounded d-flex justify-content-center align-items-center shadow">
     <p-toast position="top-right" class="rounded"></p-toast>
-    <p-table [value]="dataSource" [tableStyle]="{ 'min-width': '50rem' }">
+    <p-table [value]="personal" [tableStyle]="{ 'min-width': '50rem' }">
       <ng-template pTemplate="header">
         <tr>
           <th>ID</th>
           <th>Nombre</th>
-          <th>Email</th>
+          <th>Apellidos</th>
+          <th>Fecha De Nacimiento</th>
+          <th>Edad</th>
+          <th>Sexo</th>
+          <th>Telefono</th>
+          <th>Correo</th>
+          <th>Cargo</th>
+          <th>Estatus</th>
           <th style="width: 3rem"></th>
           <th style="width: 3rem"></th>
         </tr>
@@ -27,7 +34,14 @@
         <tr>
           <td>{{ personal.id }}</td>
           <td>{{ personal.nombre }}</td>
-          <td>{{ personal.email }}</td>
+          <td>{{ personal.apellidos }}</td>
+          <td>{{ personal.fecha_nacimiento }}</td>
+          <td>{{ calcularEdad(personal.fecha_nacimiento) }}</td>
+          <td>{{ personal.sexo }}</td>
+          <td>{{ personal.telefono }}</td>
+          <td>{{ personal.correo }}</td>
+          <td>{{ personal.cargo }}</td>
+          <td>{{ personal.estatus ? "Activo" : "Inactivo"}}</td>
           <td>
             <button type="button" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
               (click)="editarUsuario(personal)"></button>
@@ -40,8 +54,88 @@
       </ng-template>
     </p-table>
   </div>
-  <p-dialog [(visible)]="agregarDialog" [style]="{width: '70%', height: '80%'}" header="Agregar Personal" [modal]="true" class="p-fluid">
+  <p-dialog [(visible)]="agregarDialog" [style]="{width: '50%', height: '70%'}" header="Agregar Personal" [modal]="true"
+    class="p-fluid">
+    <form [formGroup]="formGroup">
+        <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input type="text" class="form-control" id="nombre" placeholder="Ingrese su nombre" formControlName="nombre">
+        </div>
+        <div class="form-group">
+          <label for="apellidos">Apellidos:</label>
+          <input type="text" class="form-control" id="apellidos" placeholder="Ingrese sus apellidos" formControlName="apellidos">
+        </div>
+        <div class="form-group">
+          <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+          <input type="date" class="form-control" id="fecha_nacimiento" formControlName="fecha_nacimiento">
+        </div>
+        <div class="form-group">
+          <label for="sexo">Sexo:</label>
+          <select class="form-control" id="sexo" formControlName="sexo">
+            <option value="Femenino">Femenino</option>
+            <option value="Masculino">Masculino</option>
+            <option value="No binario">No binario</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="telefono">Teléfono:</label>
+          <input type="tel" class="form-control" id="telefono" placeholder="Ingrese su teléfono" formControlName="telefono">
+        </div>
+        <div class="form-group">
+          <label for="correo">Correo electrónico:</label>
+          <input type="email" class="form-control" id="correo" placeholder="Ingrese su correo electrónico" formControlName="correo">
+        </div>
+        <div class="form-group">
+          <label for="cargo">Cargo:</label>
+          <input type="text" class="form-control" id="cargo" placeholder="Ingrese su cargo" formControlName="cargo">
+        </div>
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="estatus" formControlName="estatus">
+          <label class="form-check-label" for="estatus">Activo</label>
+        </div>
+        <button type="submit" class="btn btn-primary" (click)="agregar()">Guardar</button>
+    </form>
   </p-dialog>
-  <p-dialog [(visible)]="modificarDialog" [style]="{width: '70%', height: '80%'}" header="Modificar Personal" [modal]="true" class="p-fluid">
+  <p-dialog [(visible)]="modificarDialog" [style]="{width: '50%', height: '70%'}" header="Modificar Personal"
+    [modal]="true" class="p-fluid">
+    <form [formGroup]="formGroup">
+      <div class="form-group">
+        <label for="nombre">Nombre:</label>
+        <input type="text" class="form-control" id="nombre" placeholder="Ingrese su nombre" formControlName="nombre">
+      </div>
+      <div class="form-group">
+        <label for="apellidos">Apellidos:</label>
+        <input type="text" class="form-control" id="apellidos" placeholder="Ingrese sus apellidos" formControlName="apellidos">
+      </div>
+      <div class="form-group">
+        <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+        <input type="date" class="form-control" id="fecha_nacimiento" formControlName="fecha_nacimiento">
+      </div>
+      <div class="form-group">
+        <label for="sexo">Sexo:</label>
+        <select class="form-control" id="sexo" formControlName="sexo">
+          <option value="Femenino">Femenino</option>
+          <option value="Masculino">Masculino</option>
+          <option value="No binario">No binario</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="telefono">Teléfono:</label>
+        <input type="tel" class="form-control" id="telefono" placeholder="Ingrese su teléfono" formControlName="telefono">
+      </div>
+      <div class="form-group">
+        <label for="correo">Correo electrónico:</label>
+        <input type="email" class="form-control" id="correo" placeholder="Ingrese su correo electrónico" formControlName="correo">
+      </div>
+      <div class="form-group">
+        <label for="cargo">Cargo:</label>
+        <input type="text" class="form-control" id="cargo" placeholder="Ingrese su cargo" formControlName="cargo">
+      </div>
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="estatus" formControlName="estatus">
+        <label class="form-check-label" for="estatus">Activo</label>
+      </div>
+      <button type="submit" class="btn btn-primary" (click)="modificar()">Guardar</button>
+  </form>
   </p-dialog>
 </div>

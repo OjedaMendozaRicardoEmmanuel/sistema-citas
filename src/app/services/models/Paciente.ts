@@ -5,6 +5,6 @@ export interface Paciente {
   fecha_nacimiento: string
   sexo: string
   telefono: string
-  email: string
+  correo: string
   estatus: boolean
 }
