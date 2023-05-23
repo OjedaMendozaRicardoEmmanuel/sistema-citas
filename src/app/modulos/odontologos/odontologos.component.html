@@ -26,8 +26,8 @@
           <th>Telefono</th>
           <th>Correo</th>
           <th>Estatus</th>
-          <th style="width: 3rem"></th>
-          <th style="width: 3rem"></th>
+          <th style="width: 3rem">Editar</th>
+          <th style="width: 3rem">Eliminar</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-odontologo>
@@ -54,50 +54,56 @@
       </ng-template>
     </p-table>
   </div>
+
   <p-dialog [(visible)]="agregarDialog" [style]="{width: '50%', height: '70%'}" header="Agregar odontologo"
     [modal]="true" class="p-fluid">
     <form [formGroup]="formGroup">
       <div class="form-group">
         <label for="nombre">Nombre:</label>
-        <input type="text" class="form-control" id="nombre" placeholder="Ingrese su nombre" formControlName="nombre">
+        <input type="text" class="form-control" id="nombre" placeholder="Ingrese su nombre" formControlName="nombre" [class.is-invalid]="nombreNoValido">
+        <small *ngIf="nombreNoValido" class="text-danger" >Nombre requerido</small>
       </div>
       <div class="form-group">
         <label for="apellidos">Apellidos:</label>
         <input type="text" class="form-control" id="apellidos" placeholder="Ingrese sus apellidos"
-          formControlName="apellidos">
+          formControlName="apellidos" [class.is-invalid]="apellidosNoValido">
+          <small *ngIf="apellidosNoValido" class="text-danger" >Apellido requerido</small>
       </div>
       <div class="form-group">
         <label for="fecha_nacimiento">Fecha de nacimiento:</label>
-        <input type="date" class="form-control" id="fecha_nacimiento" formControlName="fecha_nacimiento">
+        <input type="date" class="form-control" id="fecha_nacimiento" formControlName="fecha_nacimiento" [class.is-invalid]="fechaNoValido">
+        <small *ngIf="fechaNoValido" class="text-danger" >Fecha requerido</small>
       </div>
       <div class="form-group">
         <label for="sexo">Sexo:</label>
-        <select class="form-control" id="sexo" formControlName="sexo">
+        <select class="form-control" id="sexo" formControlName="sexo" [class.is-invalid]="sexoNoValido">
           <option value="Femenino">Femenino</option>
           <option value="Masculino">Masculino</option>
           <option value="No binario">No binario</option>
         </select>
+        <small *ngIf="sexoNoValido" class="text-danger" >genero requerido</small>
       </div>
       <div class="form-group">
         <label for="especialidad">Especialidad</label>
         <input type="text" class="form-control" id="especialidad" placeholder="Ingrese su especialidad"
-          formControlName="especialidad">
+          formControlName="especialidad" [class.is-invalid]="especiadidadNoValido">
+          <small *ngIf="especiadidadNoValido" class="text-danger" >Especialidad requerida</small>
       </div>
       <div class="form-group">
         <label for="telefono">Teléfono:</label>
         <input type="tel" class="form-control" id="telefono" placeholder="Ingrese su teléfono"
-          formControlName="telefono">
+          formControlName="telefono" [class.is-invalid]="telefonoNoValido">
+          <small *ngIf="telefonoNoValido" class="text-danger" >Telefono requerido</small>
       </div>
       <div class="form-group">
         <label for="correo">Correo electrónico:</label>
         <input type="email" class="form-control" id="correo" placeholder="Ingrese su correo electrónico"
-          formControlName="correo">
+          formControlName="correo" [class.is-invalid]="correoNoValido">
+          <small *ngIf="correoNoValido" class="text-danger" >Correo requerido</small>
       </div>
-      <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="estatus" formControlName="estatus">
-        <label class="form-check-label" for="estatus">Activo</label>
-      </div>
+      <br/>
       <button type="submit" class="btn btn-primary" (click)="agregar()">Guardar</button>
+      <button type="button" class="btn btn-primary" (click)="btnCancelar()">Cancelar</button>
     </form>
   </p-dialog>
 

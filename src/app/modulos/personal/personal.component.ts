@@ -19,6 +19,8 @@ export class PersonalComponent {
   personal: Personal[] = [];
   formGroup: FormGroup;
 
+  valCorreo: any = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
+
   constructor(
     private messageService: MessageService,
     private compartirDatos: CompartirDatosService
@@ -31,11 +33,37 @@ export class PersonalComponent {
       fecha_nacimiento:new FormControl('', [Validators.required]),
       sexo:new FormControl('', [Validators.required]),
       telefono:new FormControl('', [Validators.required]),
-      correo:new FormControl('', [Validators.required]),
+      correo:new FormControl('', [Validators.required, Validators.pattern(this.valCorreo)]),
       cargo:new FormControl('', [Validators.required]),
       estatus:new FormControl('', [Validators.required]),
     });
   }
+
+
+  get nombreNoValido(){
+    return this.formGroup.get('nombre')?.invalid && this.formGroup.get('nombre')?.touched;
+  }
+  get apellidosNoValido(){
+    return this.formGroup.get('apellidos')?.invalid && this.formGroup.get('apellidos')?.touched;
+  }
+  get fechaNoValido(){
+    return this.formGroup.get('fecha_nacimiento')?.invalid && this.formGroup.get('fecha_nacimiento')?.touched;
+  }
+  get sexoNoValido(){
+    return this.formGroup.get('sexo')?.invalid && this.formGroup.get('sexo')?.touched;
+  }
+  get telefonoNoValido(){
+    return this.formGroup.get('telefono')?.invalid && this.formGroup.get('telefono')?.touched;
+  }
+  get correoNoValido(){
+    return this.formGroup.get('correo')?.invalid && this.formGroup.get('correo')?.touched;
+  }
+  get cargoNoValido(){
+    return this.formGroup.get('cargo')?.invalid && this.formGroup.get('cargo')?.touched;
+  }
+  /*get estatusNoValido(){
+    return this.formGroup.get('estatus')?.invalid && this.formGroup.get('estatus')?.touched;
+  }*/
 
   agregarUsuario() {
     this.agregarDialog = true;
@@ -44,10 +72,23 @@ export class PersonalComponent {
 
   agregar() {
     this.formGroup.get('id')?.setValue(this.getNextId(this.personal[this.personal.length-1].id));
-    console.log(this.formGroup.value);
-    this.compartirDatos.agregarPersonal(this.formGroup.value);
-    this.agregarDialog = false;
-    this.formGroup.reset();
+    this.formGroup.get('estatus')?.setValue('true');
+
+    if(this.formGroup.invalid){
+      console.log(this.formGroup.value);
+      return Object.values(this.formGroup.controls).forEach(control=>{
+        control.markAllAsTouched();
+      })
+      
+    }
+
+    if(this.formGroup.valid){
+      console.log(this.formGroup.value);
+      this.compartirDatos.agregarPersonal(this.formGroup.value);
+      this.agregarDialog = false;
+      this.formGroup.reset();
+      
+    }
   }
 
   modificar(){
@@ -83,5 +124,10 @@ export class PersonalComponent {
     const hoy = moment();
     const edad = hoy.diff(fechaNacimiento, 'years');
     return edad;
+  }
+
+  btnCancelar(){
+    this.formGroup.reset();
+    this.agregarDialog = false;
   }
 }

@@ -43,10 +43,25 @@ export class OdontologosComponent {
 
   agregar() {
     this.formGroup.get('id')?.setValue(this.getNextId(this.odontologos[this.odontologos.length-1].id));
-    console.log(this.formGroup.value);
-    this.compartirDatos.agregarOdontologo(this.formGroup.value);
-    this.agregarDialog = false;
-    this.formGroup.reset();
+    this.formGroup.get('estatus')?.setValue('true');
+
+    if(this.formGroup.invalid){
+      console.log(this.formGroup.value);
+      return Object.values(this.formGroup.controls).forEach(control=>{
+        control.markAllAsTouched();
+      })
+      
+    }
+
+    if(this.formGroup.valid){
+      console.log(this.formGroup.value);
+      this.compartirDatos.agregarOdontologo(this.formGroup.value);
+      this.agregarDialog = false;
+      this.formGroup.reset();
+      
+    }
+    
+   
   }
 
   mostrarModificar(odontologo: Odontologo) {
@@ -83,5 +98,34 @@ export class OdontologosComponent {
     const nextNum = lastNum + 1;
     return `ODT-${nextNum.toString().padStart(3, '0')}`;
   }
+
+
+  btnCancelar(){
+    this.formGroup.reset();
+    this.agregarDialog = false;
+  }
+
+  get nombreNoValido(){
+    return this.formGroup.get('nombre')?.invalid && this.formGroup.get('nombre')?.touched;
+  }
+  get apellidosNoValido(){
+    return this.formGroup.get('apellidos')?.invalid && this.formGroup.get('apellidos')?.touched;
+  }
+  get fechaNoValido(){
+    return this.formGroup.get('fecha_nacimiento')?.invalid && this.formGroup.get('fecha_nacimiento')?.touched;
+  }
+  get sexoNoValido(){
+    return this.formGroup.get('sexo')?.invalid && this.formGroup.get('sexo')?.touched;
+  }
+  get telefonoNoValido(){
+    return this.formGroup.get('telefono')?.invalid && this.formGroup.get('telefono')?.touched;
+  }
+  get correoNoValido(){
+    return this.formGroup.get('correo')?.invalid && this.formGroup.get('correo')?.touched;
+  }
+  get especiadidadNoValido(){
+    return this.formGroup.get('especialidad')?.invalid && this.formGroup.get('especialidad')?.touched;
+  }
+  
 
 }
