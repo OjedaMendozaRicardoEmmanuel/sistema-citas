@@ -18,6 +18,8 @@ export class OdontologosComponent {
   odontologos: Odontologo[] = [];
   formGroup: FormGroup;
 
+  valCorreo: any = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
+
   constructor(
     private messageService: MessageService,
     private compartirDatos: CompartirDatosService
@@ -31,7 +33,7 @@ export class OdontologosComponent {
       sexo:new FormControl('', [Validators.required]),
       especialidad:new FormControl('', [Validators.required]),
       telefono:new FormControl('', [Validators.required]),
-      correo:new FormControl('', [Validators.required]),
+      correo:new FormControl('', [Validators.required, Validators.pattern(this.valCorreo)]),
       estatus:new FormControl('', [Validators.required]),
     });
   }

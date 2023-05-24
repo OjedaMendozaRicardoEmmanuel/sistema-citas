@@ -18,6 +18,8 @@ export class PacientesComponent {
   pacientes: Paciente[] = [];
   formGroup: FormGroup;
 
+  valCorreo: any = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
+
   constructor(
     private messageService: MessageService,
     private compartirDatos: CompartirDatosService
@@ -30,7 +32,7 @@ export class PacientesComponent {
       fecha_nacimiento:new FormControl('', [Validators.required]),
       sexo:new FormControl('', [Validators.required]),
       telefono:new FormControl('', [Validators.required]),
-      correo:new FormControl('', [Validators.required]),
+      correo:new FormControl('', [Validators.required, Validators.pattern(this.valCorreo)]),
       estatus:new FormControl('', [Validators.required]),
     });
   }
@@ -41,11 +43,26 @@ export class PacientesComponent {
   }
 
   agregar() {
+
     this.formGroup.get('id')?.setValue(this.getNextId(this.pacientes[this.pacientes.length-1].id));
-    console.log(this.formGroup.value);
-    this.compartirDatos.agregarPaciente(this.formGroup.value);
-    this.agregarDialog = false;
-    this.formGroup.reset();
+    this.formGroup.get('estatus')?.setValue('true');
+
+    if(this.formGroup.invalid){
+      console.log(this.formGroup.value);
+      return Object.values(this.formGroup.controls).forEach(control=>{
+        control.markAllAsTouched();
+      })
+      
+    }
+
+    if(this.formGroup.valid){
+      console.log(this.formGroup.value);
+      this.compartirDatos.agregarPaciente(this.formGroup.value);
+      this.agregarDialog = false;
+      this.formGroup.reset();
+      
+    }
+
   }
 
   mostrarModificar(paciente: Paciente) {
@@ -82,4 +99,32 @@ export class PacientesComponent {
     const nextNum = lastNum + 1;
     return `PX-${nextNum.toString().padStart(3, '0')}`;
   }
+
+  btnCancelar(){
+    this.formGroup.reset();
+    this.agregarDialog = false;
+  }
+
+  get nombreNoValido(){
+    return this.formGroup.get('nombre')?.invalid && this.formGroup.get('nombre')?.touched;
+  }
+  get apellidosNoValido(){
+    return this.formGroup.get('apellidos')?.invalid && this.formGroup.get('apellidos')?.touched;
+  }
+  get fechaNoValido(){
+    return this.formGroup.get('fecha_nacimiento')?.invalid && this.formGroup.get('fecha_nacimiento')?.touched;
+  }
+  get sexoNoValido(){
+    return this.formGroup.get('sexo')?.invalid && this.formGroup.get('sexo')?.touched;
+  }
+  get telefonoNoValido(){
+    return this.formGroup.get('telefono')?.invalid && this.formGroup.get('telefono')?.touched;
+  }
+  get correoNoValido(){
+    return this.formGroup.get('correo')?.invalid && this.formGroup.get('correo')?.touched;
+  }
+  
+  /*get estatusNoValido(){
+    return this.formGroup.get('estatus')?.invalid && this.formGroup.get('estatus')?.touched;
+  }*/
 }
