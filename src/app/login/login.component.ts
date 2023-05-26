@@ -49,7 +49,8 @@ export class LoginComponent implements OnInit {
       console.log(this.usuario);
       this.apiService.login(this.usuario).subscribe(
         (respose) => {
-          this.router.navigate([`panel/admin`]);
+
+          this.router.navigate([`panel`]);
         },
         (err) => {
           alert(`usuario o contraseña incorrectos`);

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Personal } from './models/Personal';
 import { Odontologo } from './models/Odontologo';
-import { Paciente } from './models/Paciente';
+import { Paciente } from './models/Pacientes';
 
 @Injectable({
   providedIn: 'root'

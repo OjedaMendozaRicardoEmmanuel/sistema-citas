@@ -3,7 +3,7 @@ import { MessageService } from 'primeng/api';
 import { CompartirDatosService } from 'src/app/services/compartir-datos.service';
 import * as moment from 'moment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Paciente } from 'src/app/services/models/Paciente';
+import { Paciente } from 'src/app/services/models/Pacientes';
 
 @Component({
   selector: 'app-pacientes',
@@ -52,7 +52,7 @@ export class PacientesComponent {
       return Object.values(this.formGroup.controls).forEach(control=>{
         control.markAllAsTouched();
       })
-      
+
     }
 
     if(this.formGroup.valid){
@@ -60,7 +60,7 @@ export class PacientesComponent {
       this.compartirDatos.agregarPaciente(this.formGroup.value);
       this.agregarDialog = false;
       this.formGroup.reset();
-      
+
     }
 
   }
@@ -79,7 +79,7 @@ export class PacientesComponent {
       return Object.values(this.formGroup.controls).forEach(control=>{
         control.markAllAsTouched();
       })
-      
+
     }else{
 
       this.compartirDatos.modificarPaciente(this.formGroup.get('id')?.value, this.formGroup.value);
@@ -138,7 +138,7 @@ export class PacientesComponent {
   get correoNoValido(){
     return this.formGroup.get('correo')?.invalid && this.formGroup.get('correo')?.touched;
   }
-  
+
   /*get estatusNoValido(){
     return this.formGroup.get('estatus')?.invalid && this.formGroup.get('estatus')?.touched;
   }*/

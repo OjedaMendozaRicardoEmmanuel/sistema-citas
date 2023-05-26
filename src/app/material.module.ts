@@ -19,6 +19,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import {MatInputModule} from '@angular/material/input';
     ToastModule,
     DialogModule,
     MatInputModule,
+    MatSelectModule,
   ],
   exports: [
     InputTextModule,
@@ -59,6 +61,7 @@ import {MatInputModule} from '@angular/material/input';
     ToastModule,
     DialogModule,
     MatInputModule,
+    MatSelectModule,
   ],
 })
 export class MaterialModule {}

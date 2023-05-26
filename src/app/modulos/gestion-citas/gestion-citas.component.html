@@ -1,1 +1,23 @@
-<p>gestion-citas works!</p>
+<div class="100vh w-100 d-flex flex-column">
+  <div class="bg-danger w-100 agregar-citas">
+    <mat-form-field>
+      <mat-label>Pacientes</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let paciente of pacientes" [value]="paciente.id">
+          {{nombreFormato(paciente)}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Odontólogo</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let doc of odontologos" [value]="doc.id">
+          {{nombreFormato(doc)}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="bg-info w-100 tabla-citas">
+
+  </div>
+</div>
