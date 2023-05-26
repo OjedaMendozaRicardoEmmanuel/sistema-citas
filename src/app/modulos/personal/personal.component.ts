@@ -92,9 +92,19 @@ export class PersonalComponent {
   }
 
   modificar(){
-    this.compartirDatos.modificarPersonal(this.formGroup.get('id')?.value, this.formGroup.value);
-    this.formGroup.reset();
-    this.modificarDialog = false;
+
+    if(this.formGroup.invalid){
+      console.log(this.formGroup.value);
+      return Object.values(this.formGroup.controls).forEach(control=>{
+        control.markAllAsTouched();
+      })
+      
+    }else{
+
+      this.compartirDatos.modificarPersonal(this.formGroup.get('id')?.value, this.formGroup.value);
+      this.formGroup.reset();
+      this.modificarDialog = false;
+    }
   }
 
   getNextId(lastId: string): string {
@@ -129,5 +139,10 @@ export class PersonalComponent {
   btnCancelar(){
     this.formGroup.reset();
     this.agregarDialog = false;
+  }
+
+  btnCancelarM(){
+    this.formGroup.reset();
+    this.modificarDialog = false;
   }
 }

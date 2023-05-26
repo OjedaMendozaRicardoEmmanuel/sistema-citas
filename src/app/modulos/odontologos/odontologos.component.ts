@@ -74,9 +74,19 @@ export class OdontologosComponent {
   }
 
   modificar(){
-    this.compartirDatos.modificarOdontologo(this.formGroup.get('id')?.value, this.formGroup.value);
-    this.formGroup.reset();
-    this.modificarDialog = false;
+
+    if(this.formGroup.invalid){
+      console.log(this.formGroup.value);
+      return Object.values(this.formGroup.controls).forEach(control=>{
+        control.markAllAsTouched();
+      })
+      
+    }else{
+
+      this.compartirDatos.modificarOdontologo(this.formGroup.get('id')?.value, this.formGroup.value);
+      this.formGroup.reset();
+      this.modificarDialog = false;
+    }
   }
 
   eliminarOdontologo(odontologo: Odontologo) {
@@ -105,6 +115,11 @@ export class OdontologosComponent {
   btnCancelar(){
     this.formGroup.reset();
     this.agregarDialog = false;
+  }
+
+  btnCancelarM(){
+    this.formGroup.reset();
+    this.modificarDialog = false;
   }
 
   get nombreNoValido(){
