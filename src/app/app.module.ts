@@ -20,6 +20,8 @@ import { AjustesComponent } from './modulos/ajustes/ajustes.component';
 import { GestionCitasComponent } from './modulos/gestion-citas/gestion-citas.component';
 import { ReportesComponent } from './modulos/reportes/reportes.component';
 import { CompartirDatosService } from './services/compartir-datos.service';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { ApiInterceptor } from './services/api.interceptor';
 
 @NgModule({
   declarations: [
@@ -44,9 +46,17 @@ import { CompartirDatosService } from './services/compartir-datos.service';
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    HttpClientModule,
+    HttpClientModule,
   ],
-  providers: [CompartirDatosService],
+  providers: [CompartirDatosService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApiInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
