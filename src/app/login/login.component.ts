@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CompartirDatosService } from '../services/compartir-datos.service';
 import { Router } from '@angular/router';
+import { Usuario } from '../services/models/usuario';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-login',
@@ -10,19 +12,29 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   form: FormGroup;
-  usuarios = [{usuario:'',contrasenia:'',rol:''}];
+  usuarios = [{ usuario: '', contrasenia: '', rol: '' }];
 
-  usuario = {
-    usuario: '',
-    contrasenia: ''
+  usuario: Usuario = {
+    id: 0,
+    nombre: '',
+    apellidop: '',
+    apellidom: '',
+    email: '',
+    genero: '',
+    password: '',
+    estado: 0,
   };
 
   invalid = '';
 
-  constructor(public compartirDatos: CompartirDatosService, private router: Router) {
+  constructor(
+    public compartirDatos: CompartirDatosService,
+    private apiService:ApiService,
+    private router: Router
+  ) {
     this.form = new FormGroup({
-      usuario: new FormControl(this.usuario.usuario, [Validators.required]),
-      contrasenia: new FormControl(this.usuario.contrasenia, [
+      email: new FormControl(this.usuario.email, [Validators.required, Validators.email]),
+      password: new FormControl(this.usuario.password, [
         Validators.required,
       ]),
     });
@@ -33,20 +45,19 @@ export class LoginComponent implements OnInit {
 
   login() {
     if (this.form.valid) {
-      console.log(this.form.value);
-      this.usuarios.forEach(element => {
-        if (element.usuario === this.form.value.usuario &&
-          element.contrasenia === this.form.value.contrasenia) {
-            this.compartirDatos.setUser(element);
-            console.log('Usuario '+ element.rol);
-            console.log(this.compartirDatos);
-            this.router.navigate([`panel/${element.rol}`]);
-            // window.location.href=`panel/${element.rol}`;
+      this.usuario = this.form.value;
+      console.log(this.usuario);
+      this.apiService.login(this.usuario).subscribe(
+        (respose) => {
+          this.router.navigate([`panel/admin`]);
+        },
+        (err) => {
+          alert(`usuario o contraseña incorrectos`);
         }
-      });
-    } else {
-      this.invalid = 'ng-invalid ng-dirty';
+      );
     }
   }
-
+  registro() {
+    this.router.navigate([`registro`]);
+  }
 }
