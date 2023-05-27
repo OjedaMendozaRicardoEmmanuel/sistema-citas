@@ -44,7 +44,7 @@ export class PanelComponent implements OnInit {
     },
     {
       id: 3,
-      nombre: 'Odontologos',
+      nombre: 'Odontólogos',
       icon: 'bi bi-person-badge-fill',
       estado: 'desactivado',
       rol: 'Administrador',

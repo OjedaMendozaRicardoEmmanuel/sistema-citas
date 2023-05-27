@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { CompartirDatosService } from 'src/app/services/compartir-datos.service';
 import * as moment from 'moment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Odontologo } from 'src/app/services/models/Odontologo';
+import { Usuario } from 'src/app/services/models/usuario';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-odontologos',
@@ -12,91 +12,89 @@ import { Odontologo } from 'src/app/services/models/Odontologo';
   providers: [MessageService],
 })
 export class OdontologosComponent {
+  hide = true;
   agregarDialog: boolean = false;
   modificarDialog: boolean = false;
 
-  odontologos: Odontologo[] = [];
+  odontologos: Usuario[] = [];
   formGroup: FormGroup;
+  rol: any = { roles_id: 5 };
 
-  valCorreo: any = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
+  isEmailDisabled: boolean = true;
+
+  valCorreo: any =
+    /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
 
   constructor(
     private messageService: MessageService,
-    private compartirDatos: CompartirDatosService
+    private apiService: ApiService
   ) {
-    this.odontologos = compartirDatos.getOdontologos();
+    this.apiService.getUsersByRoleId(5).subscribe((res) => {
+      this.odontologos = res;
+    });
+
     this.formGroup = new FormGroup({
-      id:new FormControl('', [Validators.required]),
-      nombre:new FormControl('', [Validators.required]),
-      apellidos:new FormControl('', [Validators.required]),
-      fecha_nacimiento:new FormControl('', [Validators.required]),
-      sexo:new FormControl('', [Validators.required]),
-      especialidad:new FormControl('', [Validators.required]),
-      telefono:new FormControl('', [Validators.required]),
-      correo:new FormControl('', [Validators.required, Validators.pattern(this.valCorreo)]),
-      estatus:new FormControl('', [Validators.required]),
+      id: new FormControl(0),
+      nombre: new FormControl('', [Validators.required]),
+      apellidop: new FormControl('', [Validators.required]),
+      apellidom: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      genero: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required]),
+      estado: new FormControl(1),
     });
   }
 
-  mostrarAgregar() {
+  agregarUsuario() {
+    this.formGroup.reset();
     this.agregarDialog = true;
     console.log('dialog');
   }
 
   agregar() {
-    this.formGroup.get('id')?.setValue(this.getNextId(this.odontologos[this.odontologos.length-1].id));
-    this.formGroup.get('estatus')?.setValue('true');
-
-    if(this.formGroup.invalid){
-      console.log(this.formGroup.value);
-      return Object.values(this.formGroup.controls).forEach(control=>{
-        control.markAllAsTouched();
-      })
-      
+    // Verificar si ya existe un usuario con el mismo correo
+    const usuarioExistente = this.odontologos.find(
+      (usuario) => usuario.email === this.formGroup.get('email')?.value
+    );
+    if (usuarioExistente) {
+      alert(
+        `El correo ${this.formGroup.get('email')?.value} ya esta registrado`
+      );
     }
 
-    if(this.formGroup.valid){
-      console.log(this.formGroup.value);
-      this.compartirDatos.agregarOdontologo(this.formGroup.value);
-      this.agregarDialog = false;
-      this.formGroup.reset();
-      
+    this.formGroup.get('estado')?.setValue(1);
+    if (this.formGroup.valid && !usuarioExistente) {
+      this.apiService.createUsuario(this.formGroup.value).subscribe((res) => {
+        this.odontologos.push(res);
+        this.agregarRol(res.id, this.rol);
+        this.agregarDialog = false;
+      });
     }
-    
-   
   }
 
-  mostrarModificar(odontologo: Odontologo) {
-    this.formGroup.setValue(odontologo);
-    console.log(this.formGroup.value);
-    this.modificarDialog = true;
-    console.log('dialog');
-  }
-
-  modificar(){
-
-    if(this.formGroup.invalid){
-      console.log(this.formGroup.value);
-      return Object.values(this.formGroup.controls).forEach(control=>{
-        control.markAllAsTouched();
-      })
-      
-    }else{
-
-      this.compartirDatos.modificarOdontologo(this.formGroup.get('id')?.value, this.formGroup.value);
-      this.formGroup.reset();
+  modificar() {
+    if (this.formGroup.valid) {
+      this.updateUser(this.formGroup.value);
       this.modificarDialog = false;
     }
   }
 
-  eliminarOdontologo(odontologo: Odontologo) {
-    this.compartirDatos.eliminarOdontologo(odontologo.id);
-    this.odontologos = this.compartirDatos.getOdontologos();
-    this.messageService.add({
-      severity: 'warn',
-      summary: 'Eliminado correctamente',
-      detail: odontologo.nombre,
-    });
+  editarUsuario(personal: Usuario) {
+    this.formGroup.setValue(personal);
+    this.modificarDialog = true;
+  }
+
+  eliminarUsuario(personal: Usuario) {
+    if (confirm(`Desea eliminar al odontólogo ${personal.nombre}?`)) {
+      this.apiService.deleteUsuario(personal.id).subscribe(() => {
+        this.odontologos = this.odontologos.filter((u) => u.id !== personal.id);
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Eliminado correctamente',
+          detail: personal.nombre,
+        });
+      });
+    }
   }
 
   calcularEdad(fechaNacimiento: string) {
@@ -105,44 +103,30 @@ export class OdontologosComponent {
     return edad;
   }
 
-  getNextId(lastId: string): string {
-    const lastNum = parseInt(lastId.split('-')[1]);
-    const nextNum = lastNum + 1;
-    return `ODT-${nextNum.toString().padStart(3, '0')}`;
-  }
-
-
-  btnCancelar(){
+  btnCancelar() {
     this.formGroup.reset();
     this.agregarDialog = false;
   }
 
-  btnCancelarM(){
+  btnCancelarM() {
     this.formGroup.reset();
     this.modificarDialog = false;
   }
 
-  get nombreNoValido(){
-    return this.formGroup.get('nombre')?.invalid && this.formGroup.get('nombre')?.touched;
+  agregarRol(id: number, rol: any) {
+    this.apiService.addRolToUsuario(id, rol).subscribe(
+      (res) => {
+        console.log(res);
+      },
+      (err) => console.log(err)
+    );
   }
-  get apellidosNoValido(){
-    return this.formGroup.get('apellidos')?.invalid && this.formGroup.get('apellidos')?.touched;
-  }
-  get fechaNoValido(){
-    return this.formGroup.get('fecha_nacimiento')?.invalid && this.formGroup.get('fecha_nacimiento')?.touched;
-  }
-  get sexoNoValido(){
-    return this.formGroup.get('sexo')?.invalid && this.formGroup.get('sexo')?.touched;
-  }
-  get telefonoNoValido(){
-    return this.formGroup.get('telefono')?.invalid && this.formGroup.get('telefono')?.touched;
-  }
-  get correoNoValido(){
-    return this.formGroup.get('correo')?.invalid && this.formGroup.get('correo')?.touched;
-  }
-  get especiadidadNoValido(){
-    return this.formGroup.get('especialidad')?.invalid && this.formGroup.get('especialidad')?.touched;
-  }
-  
 
+  // Actualizar un usuario existente
+  updateUser(user: Usuario): void {
+    this.apiService.updateUsuario(user.id, user).subscribe((updatedUser) => {
+      const index = this.odontologos.findIndex((u) => u.id === updatedUser.id);
+      this.odontologos[index] = updatedUser;
+    });
+  }
 }

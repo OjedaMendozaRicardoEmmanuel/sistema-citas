@@ -10,7 +10,6 @@
       </div>
     </div>
   </p-toolbar>
-
   <div class="card rounded d-flex justify-content-center align-items-center shadow">
     <p-toast position="top-right" class="rounded"></p-toast>
     <p-table [value]="pacientes" [tableStyle]="{ 'min-width': '50rem' }">
@@ -18,33 +17,32 @@
         <tr>
           <th>ID</th>
           <th>Nombre</th>
-          <th>Apellidos</th>
+          <th>1er Apellido</th>
+          <th>2do Apellido</th>
           <th>Fecha De Nacimiento</th>
           <th>Edad</th>
-          <th>Sexo</th>
+          <th>Genero</th>
           <th>Telefono</th>
           <th>Correo</th>
           <th>Estatus</th>
-          <th style="width: 3rem"></th>
-          <th style="width: 3rem"></th>
+          <th style="width: 3rem">Acciones</th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-paciente>
+      <ng-template pTemplate="body" let-paciente class="overflow-scroll">
         <tr>
-          <td>{{ paciente.id }}</td>
+          <td>PX-{{ paciente.id }}</td>
           <td>{{ paciente.nombre }}</td>
-          <td>{{ paciente.apellidos }}</td>
+          <td>{{ paciente.apellidop }}</td>
+          <td>{{ paciente.apellidom }}</td>
           <td>{{ paciente.fecha_nacimiento }}</td>
           <td>{{ calcularEdad(paciente.fecha_nacimiento) }}</td>
-          <td>{{ paciente.sexo }}</td>
+          <td>{{ paciente.genero }}</td>
           <td>{{ paciente.telefono }}</td>
           <td>{{ paciente.correo }}</td>
-          <td>{{ paciente.estatus ? "Activo" : "Inactivo"}}</td>
-          <td>
-            <button type="button" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+          <td>{{ paciente.estado ? "Activo" : "Inactivo"}}</td>
+          <td class="d-flex flex-row">
+            <button type="button" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success me-2"
               (click)="mostrarModificar(paciente)"></button>
-          </td>
-          <td>
             <button type="button" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
               (click)="eliminarPaciente(paciente)"></button>
           </td>
@@ -52,101 +50,86 @@
       </ng-template>
     </p-table>
   </div>
-
-  <p-dialog [(visible)]="agregarDialog" [style]="{width: '50%', height: '70%'}" header="Agregar paciente"
-    [modal]="true" class="p-fluid">
+  <p-dialog [(visible)]="agregarDialog" [style]="{width: '30%', height: '80%'}" header="Agregar paciente" [modal]="true"
+    class="p-fluid">
     <form [formGroup]="formGroup">
-      <div class="form-group">
-        <label for="nombre">Nombre:</label>
-        <input type="text" class="form-control" id="nombre" placeholder="Ingrese su nombre" formControlName="nombre" [class.is-invalid]="nombreNoValido">
-        <small *ngIf="nombreNoValido" class="text-danger" >Nombre requerido</small>
+      <mat-form-field class="w-100">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="nombre">
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label>Primer Apellido</mat-label>
+        <input matInput formControlName="apellidop">
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label>Segundo Apellido</mat-label>
+        <input matInput formControlName="apellidom">
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label>Fecha Nacimiento</mat-label>
+        <input matNativeControl type="date" formControlName="fecha_nacimiento">
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="correo">
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label>Telefono</mat-label>
+        <input matInput formControlName="telefono">
+      </mat-form-field>
+      <div class="w-100 my-2">
+        <label id="radio-group">Genero:</label>
+        <mat-radio-group formControlName="genero" id="radio-group">
+          <mat-radio-button value="Masculino" >Masculino</mat-radio-button>
+          <mat-radio-button value="Femenino">Femenino</mat-radio-button>
+        </mat-radio-group>
       </div>
-      <div class="form-group">
-        <label for="apellidos">Apellidos:</label>
-        <input type="text" class="form-control" id="apellidos" placeholder="Ingrese sus apellidos"
-          formControlName="apellidos" [class.is-invalid]="apellidosNoValido">
-          <small *ngIf="apellidosNoValido" class="text-danger" >Apellidos requeridos</small>
+      <div class="w-75 mt-2">
+        <button type="submit" class="btn btn-primary me-2" (click)="agregar()">Guardar</button>
+        <button type="button" class="btn btn-primary" (click)="btnCancelar()">Cancelar</button>
       </div>
-      <div class="form-group">
-        <label for="fecha_nacimiento">Fecha de nacimiento:</label>
-        <input type="date" class="form-control" id="fecha_nacimiento" formControlName="fecha_nacimiento" [class.is-invalid]="fechaNoValido">
-        <small *ngIf="fechaNoValido" class="text-danger" >Fecha requerida</small>
-      </div>
-      <div class="form-group">
-        <label for="sexo">Sexo:</label>
-        <select class="form-control" id="sexo" formControlName="sexo" [class.is-invalid]="sexoNoValido">
-          <option value="Femenino">Femenino</option>
-          <option value="Masculino">Masculino</option>
-          <option value="No binario">No binario</option>
-        </select>
-        <small *ngIf="sexoNoValido" class="text-danger" >genero requerido</small>
-      </div>
-      <div class="form-group">
-        <label for="telefono">Teléfono:</label>
-        <input type="tel" class="form-control" id="telefono" placeholder="Ingrese su teléfono"
-          formControlName="telefono" [class.is-invalid]="telefonoNoValido">
-          <small *ngIf="telefonoNoValido" class="text-danger" >Telefono requerido</small>
-      </div>
-      <div class="form-group">
-        <label for="correo">Correo electrónico:</label>
-        <input type="email" class="form-control" id="correo" placeholder="Ingrese su correo electrónico"
-          formControlName="correo" [class.is-invalid]="correoNoValido">
-          <small *ngIf="correoNoValido" class="text-danger" >Correo invalido</small>
-      </div>
-      <br/>
-      <button type="submit" class="btn btn-primary" (click)="agregar()">Guardar</button>
-      <button type="button" class="btn btn-primary" (click)="btnCancelar()">Cancelar</button>
     </form>
   </p-dialog>
-
-  <p-dialog [(visible)]="modificarDialog" [style]="{width: '50%', height: '70%'}" header="Modificar paciente"
+  <p-dialog [(visible)]="modificarDialog" [style]="{width: '30%', height: '80%'}" header="Modificar paciente"
     [modal]="true" class="p-fluid">
     <form [formGroup]="formGroup">
-      <div class="form-group">
-        <label for="nombre">Nombre:</label>
-        <input type="text" class="form-control" id="nombre" placeholder="Ingrese su nombre" formControlName="nombre" [class.is-invalid]="nombreNoValido">
-        <small *ngIf="nombreNoValido" class="text-danger" >Nombre requerido</small>
+      <mat-form-field class="w-100">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="nombre">
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label>Primer Apellido</mat-label>
+        <input matInput formControlName="apellidop">
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label>Segundo Apellido</mat-label>
+        <input matInput formControlName="apellidom">
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label>Fecha Nacimiento</mat-label>
+        <input matNativeControl type="date" formControlName="fecha_nacimiento">
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="correo">
+      </mat-form-field>
+      <mat-form-field class="w-100">
+        <mat-label>Telefono</mat-label>
+        <input matInput formControlName="telefono">
+      </mat-form-field>
+      <div class="w-100 my-2">
+        <label id="radio-group">Genero:</label>
+        <mat-radio-group formControlName="genero" id="radio-group">
+          <mat-radio-button value="Masculino" >Masculino</mat-radio-button>
+          <mat-radio-button value="Femenino">Femenino</mat-radio-button>
+        </mat-radio-group>
       </div>
-      <div class="form-group">
-        <label for="apellidos">Apellidos:</label>
-        <input type="text" class="form-control" id="apellidos" placeholder="Ingrese sus apellidos"
-          formControlName="apellidos" [class.is-invalid]="apellidosNoValido">
-          <small *ngIf="apellidosNoValido" class="text-danger" >Apellidos requeridos</small>
+      <div class="w-100 my-1 align-content-end">
+        <mat-slide-toggle formControlName="estado">Activo</mat-slide-toggle>
       </div>
-      <div class="form-group">
-        <label for="fecha_nacimiento">Fecha de nacimiento:</label>
-        <input type="date" class="form-control" id="fecha_nacimiento" formControlName="fecha_nacimiento" [class.is-invalid]="fechaNoValido">
-        <small *ngIf="fechaNoValido" class="text-danger" >Fecha requerida</small>
-      </div>
-      <div class="form-group">
-        <label for="sexo">Sexo:</label>
-        <select class="form-control" id="sexo" formControlName="sexo" [class.is-invalid]="sexoNoValido">
-          <option value="Femenino">Femenino</option>
-          <option value="Masculino">Masculino</option>
-          <option value="No binario">No binario</option>
-        </select>
-        <small *ngIf="sexoNoValido" class="text-danger" >genero requerido</small>
-      </div>
-      <div class="form-group">
-        <label for="telefono">Teléfono:</label>
-        <input type="tel" class="form-control" id="telefono" placeholder="Ingrese su teléfono"
-          formControlName="telefono" [class.is-invalid]="telefonoNoValido">
-          <small *ngIf="telefonoNoValido" class="text-danger" >Telefono requerido</small>
-      </div>
-      <div class="form-group">
-        <label for="correo">Correo electrónico:</label>
-        <input type="email" class="form-control" id="correo" placeholder="Ingrese su correo electrónico"
-          formControlName="correo" [class.is-invalid]="correoNoValido" readonly>
-          <small *ngIf="correoNoValido" class="text-danger" >Correo invalido</small>
-      </div>
-
-
-
-      <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="estatus" formControlName="estatus">
-        <label class="form-check-label" for="estatus">Activo</label>
-      </div>
-      <button type="submit" class="btn btn-primary" (click)="modificar()">Guardar</button>
+      <div class="w-75 mt-2">
+        <button type="submit" class="btn btn-primary me-2" (click)="modificar()">Guardar</button>
       <button type="button" class="btn btn-primary" (click)="btnCancelarM()">Cancelar</button>
+      </div>
     </form>
   </p-dialog>

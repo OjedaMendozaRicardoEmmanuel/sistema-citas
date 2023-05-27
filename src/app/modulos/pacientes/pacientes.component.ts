@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { CompartirDatosService } from 'src/app/services/compartir-datos.service';
 import * as moment from 'moment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Paciente } from 'src/app/services/models/Pacientes';
+import { ApiService } from 'src/app/services/api.service';
+import { Paciente } from 'src/app/services/models/paciente';
 
 @Component({
   selector: 'app-pacientes',
@@ -22,47 +22,50 @@ export class PacientesComponent {
 
   constructor(
     private messageService: MessageService,
-    private compartirDatos: CompartirDatosService
+    private apiService: ApiService
   ) {
-    this.pacientes = compartirDatos.getPacientes();
+
+    this.apiService.getAllPacientes().subscribe(
+      res => {
+        this.pacientes = res;
+    });
     this.formGroup = new FormGroup({
-      id:new FormControl('', [Validators.required]),
+      id:new FormControl(''),
       nombre:new FormControl('', [Validators.required]),
-      apellidos:new FormControl('', [Validators.required]),
+      apellidop:new FormControl('', [Validators.required]),
+      apellidom:new FormControl('', [Validators.required]),
+      genero:new FormControl('', [Validators.required]),
       fecha_nacimiento:new FormControl('', [Validators.required]),
-      sexo:new FormControl('', [Validators.required]),
-      telefono:new FormControl('', [Validators.required]),
-      correo:new FormControl('', [Validators.required, Validators.pattern(this.valCorreo)]),
-      estatus:new FormControl('', [Validators.required]),
+      correo:new FormControl('', [Validators.required, Validators.email]),
+      telefono:new FormControl('', [Validators.required, ]),
+      estado:new FormControl(''),
     });
   }
 
   mostrarAgregar() {
+    this.formGroup.reset();
     this.agregarDialog = true;
     console.log('dialog');
   }
 
   agregar() {
-
-    this.formGroup.get('id')?.setValue(this.getNextId(this.pacientes[this.pacientes.length-1].id));
-    this.formGroup.get('estatus')?.setValue('true');
-
-    if(this.formGroup.invalid){
-      console.log(this.formGroup.value);
-      return Object.values(this.formGroup.controls).forEach(control=>{
-        control.markAllAsTouched();
-      })
-
+    // Verificar si ya existe un usuario con el mismo correo
+    const usuarioExistente = this.pacientes.find(
+      (usuario) => usuario.correo === this.formGroup.get('correo')?.value
+    );
+    if (usuarioExistente) {
+      alert(
+        `El correo ${this.formGroup.get('correo')?.value} ya esta registrado`
+      );
     }
 
-    if(this.formGroup.valid){
-      console.log(this.formGroup.value);
-      this.compartirDatos.agregarPaciente(this.formGroup.value);
-      this.agregarDialog = false;
-      this.formGroup.reset();
-
+    this.formGroup.get('estado')?.setValue(1);
+    if (this.formGroup.valid && !usuarioExistente) {
+      this.apiService.createPaciente(this.formGroup.value).subscribe((res) => {
+        this.pacientes.push(res);
+        this.agregarDialog = false;
+      });
     }
-
   }
 
   mostrarModificar(paciente: Paciente) {
@@ -73,41 +76,22 @@ export class PacientesComponent {
   }
 
   modificar(){
-
-    if(this.formGroup.invalid){
-      console.log(this.formGroup.value);
-      return Object.values(this.formGroup.controls).forEach(control=>{
-        control.markAllAsTouched();
-      })
-
-    }else{
-
-      this.compartirDatos.modificarPaciente(this.formGroup.get('id')?.value, this.formGroup.value);
-      this.formGroup.reset();
+    if (this.formGroup.valid) {
+      this.updatePX(this.formGroup.value);
       this.modificarDialog = false;
     }
   }
 
   eliminarPaciente(paciente: Paciente) {
-    this.compartirDatos.eliminarPaciente(paciente.id);
-    this.pacientes = this.compartirDatos.getPacientes();
-    this.messageService.add({
-      severity: 'warn',
-      summary: 'Eliminado correctamente',
-      detail: paciente.nombre,
-    });
+    if (confirm(`Desea eliminar al paciente ${paciente.nombre}?`)) {
+      this.eliminarPX(paciente);
+    }
   }
 
   calcularEdad(fechaNacimiento: string) {
     const hoy = moment();
     const edad = hoy.diff(fechaNacimiento, 'years');
     return edad;
-  }
-
-  getNextId(lastId: string): string {
-    const lastNum = parseInt(lastId.split('-')[1]);
-    const nextNum = lastNum + 1;
-    return `PX-${nextNum.toString().padStart(3, '0')}`;
   }
 
   btnCancelar(){
@@ -120,26 +104,22 @@ export class PacientesComponent {
     this.modificarDialog = false;
   }
 
-  get nombreNoValido(){
-    return this.formGroup.get('nombre')?.invalid && this.formGroup.get('nombre')?.touched;
-  }
-  get apellidosNoValido(){
-    return this.formGroup.get('apellidos')?.invalid && this.formGroup.get('apellidos')?.touched;
-  }
-  get fechaNoValido(){
-    return this.formGroup.get('fecha_nacimiento')?.invalid && this.formGroup.get('fecha_nacimiento')?.touched;
-  }
-  get sexoNoValido(){
-    return this.formGroup.get('sexo')?.invalid && this.formGroup.get('sexo')?.touched;
-  }
-  get telefonoNoValido(){
-    return this.formGroup.get('telefono')?.invalid && this.formGroup.get('telefono')?.touched;
-  }
-  get correoNoValido(){
-    return this.formGroup.get('correo')?.invalid && this.formGroup.get('correo')?.touched;
+  // Actualizar un usuario existente
+  updatePX(px: Paciente): void {
+    this.apiService.updatePaciente(px.id, px).subscribe(updatedUser => {
+      const index = this.pacientes.findIndex(u => u.id === updatedUser.id);
+      this.pacientes[index] = updatedUser;
+    });
   }
 
-  /*get estatusNoValido(){
-    return this.formGroup.get('estatus')?.invalid && this.formGroup.get('estatus')?.touched;
-  }*/
+  eliminarPX(px: Paciente) {
+    this.apiService.deletePaciente(px.id).subscribe(() => {
+      this.pacientes = this.pacientes.filter((u) => u.id !== px.id);
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Eliminado correctamente',
+        detail: px.nombre,
+      });
+    });
+  }
 }

@@ -11,6 +11,8 @@ import { ApiService } from '../services/api.service';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
+
+  hide = true;
   form: FormGroup;
   usuarios = [{ usuario: '', contrasenia: '', rol: '' }];
 

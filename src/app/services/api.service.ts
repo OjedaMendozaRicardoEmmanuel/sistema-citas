@@ -7,7 +7,7 @@ import { Rol } from './models/rol';
 import { Permiso } from './models/permiso';
 import { Doctor } from './models/doctor';
 import { Especialidad } from './models/especialidad';
-import { Paciente } from './models/Pacientes';
+import { Paciente } from './models/paciente';
 import { Cita } from './models/cita';
 import { Expediente } from './models/expediente';
 
