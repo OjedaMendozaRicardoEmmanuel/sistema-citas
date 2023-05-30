@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CompartirDatosService } from '../services/compartir-datos.service';
 import { Router } from '@angular/router';
 import { Usuario } from '../services/models/usuario';
 import { ApiService } from '../services/api.service';
@@ -102,7 +101,6 @@ export class PanelComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private compartirDatos: CompartirDatosService,
     private router: Router
   ) {
 
@@ -121,8 +119,8 @@ export class PanelComponent implements OnInit {
         return this.apiService.getUsuarioRoles(this.usuario.id);
       })
     )
-    .subscribe((resultadoNotas) => {
-      this.tipoUsuario = resultadoNotas[0].nombre;
+    .subscribe((resultado) => {
+      this.tipoUsuario = resultado[0].nombre;
       console.log(this.tipoUsuario);
       this.user = this.usuario.nombre;
       this.modulosActivos();

@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/services/api.service';
 import { Paciente } from 'src/app/services/models/paciente';
+import { ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-pacientes',
@@ -18,27 +19,28 @@ export class PacientesComponent {
   pacientes: Paciente[] = [];
   formGroup: FormGroup;
 
-  valCorreo: any = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
+  @ViewChild('dataTable') dataTable: any;
+
+  valCorreo: any =
+    /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
 
   constructor(
     private messageService: MessageService,
     private apiService: ApiService
   ) {
-
-    this.apiService.getAllPacientes().subscribe(
-      res => {
-        this.pacientes = res;
+    this.apiService.getAllPacientes().subscribe((res) => {
+      this.pacientes = res;
     });
     this.formGroup = new FormGroup({
-      id:new FormControl(''),
-      nombre:new FormControl('', [Validators.required]),
-      apellidop:new FormControl('', [Validators.required]),
-      apellidom:new FormControl('', [Validators.required]),
-      genero:new FormControl('', [Validators.required]),
-      fecha_nacimiento:new FormControl('', [Validators.required]),
-      correo:new FormControl('', [Validators.required, Validators.email]),
-      telefono:new FormControl('', [Validators.required, ]),
-      estado:new FormControl(''),
+      id: new FormControl(''),
+      nombre: new FormControl('', [Validators.required]),
+      apellidop: new FormControl('', [Validators.required]),
+      apellidom: new FormControl('', [Validators.required]),
+      genero: new FormControl('', [Validators.required]),
+      fecha_nacimiento: new FormControl('', [Validators.required]),
+      correo: new FormControl('', [Validators.required, Validators.email]),
+      telefono: new FormControl('', [Validators.required]),
+      estado: new FormControl(''),
     });
   }
 
@@ -46,6 +48,11 @@ export class PacientesComponent {
     this.formGroup.reset();
     this.agregarDialog = true;
     console.log('dialog');
+  }
+
+  // Método para refrescar la tabla
+  public refreshTable(): void {
+    this.dataTable.reset();
   }
 
   agregar() {
@@ -63,6 +70,7 @@ export class PacientesComponent {
     if (this.formGroup.valid && !usuarioExistente) {
       this.apiService.createPaciente(this.formGroup.value).subscribe((res) => {
         this.pacientes.push(res);
+        this.refreshTable()
         this.agregarDialog = false;
       });
     }
@@ -75,7 +83,7 @@ export class PacientesComponent {
     console.log('dialog');
   }
 
-  modificar(){
+  modificar() {
     if (this.formGroup.valid) {
       this.updatePX(this.formGroup.value);
       this.modificarDialog = false;
@@ -94,20 +102,20 @@ export class PacientesComponent {
     return edad;
   }
 
-  btnCancelar(){
+  btnCancelar() {
     this.formGroup.reset();
     this.agregarDialog = false;
   }
 
-  btnCancelarM(){
+  btnCancelarM() {
     this.formGroup.reset();
     this.modificarDialog = false;
   }
 
   // Actualizar un usuario existente
   updatePX(px: Paciente): void {
-    this.apiService.updatePaciente(px.id, px).subscribe(updatedUser => {
-      const index = this.pacientes.findIndex(u => u.id === updatedUser.id);
+    this.apiService.updatePaciente(px.id, px).subscribe((updatedUser) => {
+      const index = this.pacientes.findIndex((u) => u.id === updatedUser.id);
       this.pacientes[index] = updatedUser;
     });
   }

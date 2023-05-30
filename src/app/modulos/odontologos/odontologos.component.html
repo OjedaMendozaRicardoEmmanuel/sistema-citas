@@ -10,7 +10,6 @@
       </div>
     </div>
   </p-toolbar>
-
   <div class="card rounded d-flex justify-content-center align-items-center shadow">
     <p-toast position="top-right" class="rounded"></p-toast>
     <p-table [value]="odontologos" [tableStyle]="{ 'min-width': '50rem' }">
@@ -18,8 +17,7 @@
         <tr>
           <th>ID</th>
           <th>Nombre</th>
-          <th>1re Apellido</th>
-          <th>2do Apellido</th>
+          <th>Apellidos</th>
           <th>Email</th>
           <th>Genero</th>
           <th>Estatus</th>
@@ -30,8 +28,7 @@
         <tr>
           <td>ODT-{{ personal.id }}</td>
           <td>{{ personal.nombre }}</td>
-          <td>{{ personal.apellidop }}</td>
-          <td>{{ personal.apellidom }}</td>
+          <td>{{ personal.apellidop }} {{ personal.apellidom }}</td>
           <td>{{ personal.email }}</td>
           <td>{{ personal.genero }}</td>
           <td>{{ personal.estado ? "Activo" : "Inactivo"}}</td>
@@ -46,7 +43,7 @@
     </p-table>
   </div>
 
-  <p-dialog [(visible)]="agregarDialog" [style]="{width: '30%', height: '70%'}" header="Agregar Personal" [modal]="true"
+  <p-dialog [(visible)]="agregarDialog" [style]="{width: '30%', height: '70%'}" header="Agregar Odontólogo" [modal]="true"
     class="p-fluid">
     <form [formGroup]="formGroup" class="d-flex flex-column justify-content-center align-content-center">
       <mat-form-field class="w-100">
@@ -81,11 +78,11 @@
       </div>
         <div class="w-75 mt-2">
           <button type="submit" class="btn btn-primary w-40 me-2" (click)="agregar()">Guardar</button>
-        <button type="button" class="btn btn-primary w-40" (click)="btnCancelar()">Cancelar</button>
+        <button type="button" class="btn btn-danger w-40" (click)="btnCancelar()">Cancelar</button>
         </div>
     </form>
   </p-dialog>
-  <p-dialog [(visible)]="modificarDialog" [style]="{width: '30%', height: '70%'}" header="Modificar Personal"
+  <p-dialog [(visible)]="modificarDialog" [style]="{width: '30%', height: '70%'}" header="Modificar Odontólogo"
     [modal]="true" class="p-fluid">
     <form [formGroup]="formGroup">
       <mat-form-field class="w-100">
@@ -123,7 +120,7 @@
       </div>
       <div class="w-75 mt-2">
         <button type="submit" class="btn btn-primary me-2" (click)="modificar()">Guardar</button>
-        <button type="button" class="btn btn-primary" (click)="btnCancelarM()">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="btnCancelarM()">Cancelar</button>
       </div>
   </form>
   </p-dialog>

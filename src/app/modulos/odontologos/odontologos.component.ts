@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Usuario } from 'src/app/services/models/usuario';
 import { ApiService } from 'src/app/services/api.service';
+import { Doctor } from 'src/app/services/models/doctor';
 
 @Component({
   selector: 'app-odontologos',
@@ -21,9 +22,6 @@ export class OdontologosComponent {
   rol: any = { roles_id: 5 };
 
   isEmailDisabled: boolean = true;
-
-  valCorreo: any =
-    /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
 
   constructor(
     private messageService: MessageService,
@@ -67,6 +65,7 @@ export class OdontologosComponent {
       this.apiService.createUsuario(this.formGroup.value).subscribe((res) => {
         this.odontologos.push(res);
         this.agregarRol(res.id, this.rol);
+        this.agregarOdo(res.id)
         this.agregarDialog = false;
       });
     }
@@ -128,5 +127,11 @@ export class OdontologosComponent {
       const index = this.odontologos.findIndex((u) => u.id === updatedUser.id);
       this.odontologos[index] = updatedUser;
     });
+  }
+
+  agregarOdo(id_user:number){
+    const odo:Doctor = {id:0, cedula:'',usuarios_id:id_user};
+    this.apiService.createDoctor(odo).subscribe(res => console.log(res)
+    );
   }
 }

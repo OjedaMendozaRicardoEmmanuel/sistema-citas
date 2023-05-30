@@ -1,0 +1,8 @@
+{
+  "/api/*": {
+    "target": "https://lowering-photos.000webhostapp.com/",
+    "secure": false,
+    "logLevel":"debug",
+    "changeOrigin": true
+  }
+}

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { CompartirDatosService } from '../services/compartir-datos.service';
 import { Router } from '@angular/router';
 import { Usuario } from '../services/models/usuario';
 import { ApiService } from '../services/api.service';
@@ -30,7 +29,6 @@ export class LoginComponent implements OnInit {
   invalid = '';
 
   constructor(
-    public compartirDatos: CompartirDatosService,
     private apiService:ApiService,
     private router: Router
   ) {
@@ -42,7 +40,7 @@ export class LoginComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    this.usuarios = this.compartirDatos.getDatos();
+
   }
 
   login() {

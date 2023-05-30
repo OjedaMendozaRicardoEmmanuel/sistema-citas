@@ -1,41 +1,53 @@
 <div class="100vh w-100 d-flex flex-column p-4 fondo">
   <div class="card w-100 agregar-citas mb-2">
-    <form class="w-100 h-100 d-flex flex-row justify-content-center align-items-center">
-      <mat-form-field class="m-2">
-        <input matInput [matDatepicker]="picker" placeholder="Selecciona una fecha" [min]="fechaMinima">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-      <mat-form-field class="m-2">
-        <mat-label>Selecciona una hora</mat-label>
-        <mat-select>
-          <mat-option *ngFor="let hora of horas" [value]="hora">{{ hora }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field class="m-2 w-25">
-        <mat-label>Pacientes</mat-label>
-        <mat-select>
-          <mat-option *ngFor="let paciente of pacientes" [value]="paciente.id">
-            {{nombreFormato(paciente)}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field class="m-2 w-25">
-        <mat-label>Odontólogo</mat-label>
-        <mat-select>
-          <mat-option *ngFor="let doc of odontologos" [value]="doc.id">
-            {{nombreFormato(optenerUserDeOdontologo(doc))}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button mat-raised-button color="primary">Agendar Cita</button>
+    <form [formGroup]="formGroup" class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+      <div class="w-100 h-75 d-flex flex-col justify-content-center align-items-center">
+        <mat-form-field class="m-2">
+          <mat-label>Fecha</mat-label>
+          <input matInput [matDatepicker]="picker" placeholder="Selecciona una fecha" [min]="fechaMinima" formControlName="fecha">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="m-2">
+          <mat-label>Selecciona una hora</mat-label>
+          <mat-select formControlName="hora">
+            <mat-option *ngFor="let hora of horas" [value]="hora">{{ hora }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="m-2 w-25">
+          <mat-label>Pacientes</mat-label>
+          <mat-select formControlName="paciente_id">
+            <mat-option *ngFor="let paciente of pacientes" [value]="paciente.id">
+              {{nombreFormato(paciente)}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="m-2 w-25">
+          <mat-label>Odontólogo</mat-label>
+          <mat-select formControlName="doctor_id">
+            <mat-option *ngFor="let doc of odontologos" [value]="doc.id">
+              {{nombreFormato(optenerUserDeOdontologo(doc))}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="w-100 h-25 d-flex flex-col justify-content-end pe-5">
+      <button mat-raised-button color="primary" class="me-2" (click)="guardar()">{{ editar ? "Guardar ": "Agendar Cita"}}</button>
+      <button mat-raised-button color="warn" class="me-5" (click)="cancelar()">Cancelar</button>
+      </div>
     </form>
   </div>
   <div class="card w-100 tabla-citas overflow-hidden">
-    <p-table [value]="citas" [tableStyle]="{'min-width': '50rem'}">
+    <p-table #dataTable [value]="citas" [paginator]="true"
+    [rows]="5"
+    [showCurrentPageReport]="true"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="{last} de {totalRecords}"
+>
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th>Fecha </th>
+          <th>ID</th>
+          <th>Fecha</th>
           <th>Paciente</th>
           <th>Odontólogo</th>
           <th>Estatus</th>
@@ -44,17 +56,18 @@
       </ng-template>
       <ng-template pTemplate="body" let-cita let-columns="columns">
         <tr>
+          <td>CT-{{cita.id}}</td>
           <td>{{cita.fecha_hora}}</td>
           <td>{{nombreFormato(obtenerPacienteCita(cita.paciente_id))}}</td>
           <td>{{nombreFormato(obtenerOdonCita(cita.doctor_id))}}</td>
           <td><p-tag [value]="getEstatus(cita.estatus)" [severity]="getSeverity(cita.estatus)"></p-tag></td>
           <td class="d-flex flex-row">
             <button type="button" pButton pRipple icon="pi pi-pencil"
-              class="p-button-rounded p-button-warning m-2"></button>
+              class="p-button-rounded p-button-warning m-2" (click)="editarCita(cita)"></button>
             <button type="button" pButton pRipple icon="pi pi-whatsapp"
               class="p-button-rounded p-button-success m-2"></button>
             <button type="button" pButton pRipple icon="pi pi-trash"
-              class="p-button-rounded p-button-danger m-2"></button>
+              class="p-button-rounded p-button-danger m-2" (click)="eliminarUsuario(cita)"></button>
           </td>
         </tr>
       </ng-template>

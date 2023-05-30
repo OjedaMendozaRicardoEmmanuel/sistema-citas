@@ -12,13 +12,17 @@
   </p-toolbar>
   <div class="card rounded d-flex justify-content-center align-items-center shadow">
     <p-toast position="top-right" class="rounded"></p-toast>
-    <p-table [value]="pacientes" [tableStyle]="{ 'min-width': '50rem' }">
+    <p-table #dataTable [value]="pacientes" [paginator]="true"
+    [rows]="7"
+    [showCurrentPageReport]="true"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="{last} de {totalRecords}"
+>
       <ng-template pTemplate="header">
         <tr>
           <th>ID</th>
           <th>Nombre</th>
-          <th>1er Apellido</th>
-          <th>2do Apellido</th>
+          <th>Apellidos</th>
           <th>Fecha De Nacimiento</th>
           <th>Edad</th>
           <th>Genero</th>
@@ -32,8 +36,7 @@
         <tr>
           <td>PX-{{ paciente.id }}</td>
           <td>{{ paciente.nombre }}</td>
-          <td>{{ paciente.apellidop }}</td>
-          <td>{{ paciente.apellidom }}</td>
+          <td>{{ paciente.apellidop }} {{ paciente.apellidom }}</td>
           <td>{{ paciente.fecha_nacimiento }}</td>
           <td>{{ calcularEdad(paciente.fecha_nacimiento) }}</td>
           <td>{{ paciente.genero }}</td>
@@ -86,7 +89,7 @@
       </div>
       <div class="w-75 mt-2">
         <button type="submit" class="btn btn-primary me-2" (click)="agregar()">Guardar</button>
-        <button type="button" class="btn btn-primary" (click)="btnCancelar()">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="btnCancelar()">Cancelar</button>
       </div>
     </form>
   </p-dialog>
@@ -129,7 +132,7 @@
       </div>
       <div class="w-75 mt-2">
         <button type="submit" class="btn btn-primary me-2" (click)="modificar()">Guardar</button>
-      <button type="button" class="btn btn-primary" (click)="btnCancelarM()">Cancelar</button>
+      <button type="button" class="btn btn-danger" (click)="btnCancelarM()">Cancelar</button>
       </div>
     </form>
   </p-dialog>

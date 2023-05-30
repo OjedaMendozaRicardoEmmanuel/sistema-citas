@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import * as moment from 'moment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -13,7 +13,7 @@ import { Rol } from 'src/app/services/models/rol';
   styleUrls: ['./personal.component.css'],
   providers: [MessageService],
 })
-export class PersonalComponent {
+export class PersonalComponent implements OnInit {
   hide = true;
   agregarDialog: boolean = false;
   modificarDialog: boolean = false;
@@ -32,14 +32,6 @@ export class PersonalComponent {
     private messageService: MessageService,
     private apiService: ApiService
   ) {
-    const getUsersByRoleId1$ = this.apiService.getUsersByRoleId(1);
-    const getUsersByRoleId2$ = this.apiService.getUsersByRoleId(2);
-
-    concat(getUsersByRoleId1$, getUsersByRoleId2$).subscribe((usuarios) => {
-      usuarios.forEach((element) => {
-        this.personal.push(element);
-      });
-    });
 
     this.formGroup = new FormGroup({
       id: new FormControl(0),
@@ -50,6 +42,16 @@ export class PersonalComponent {
       genero: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
       estado: new FormControl(1),
+    });
+  }
+  ngOnInit(): void {
+    const getUsersByRoleId1$ = this.apiService.getUsersByRoleId(1);
+    const getUsersByRoleId2$ = this.apiService.getUsersByRoleId(2);
+
+    concat(getUsersByRoleId1$, getUsersByRoleId2$).subscribe((usuarios) => {
+      usuarios.forEach((element) => {
+        this.personal.push(element);
+      });
     });
   }
 
