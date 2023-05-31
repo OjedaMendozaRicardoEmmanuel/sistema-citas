@@ -20,7 +20,6 @@ export class PacientesComponent {
   formGroup: FormGroup;
 
   @ViewChild('dataTable') dataTable: any;
-  @ViewChild('formulario') formulario: any;
 
   valCorreo: any =
     /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
@@ -105,13 +104,11 @@ export class PacientesComponent {
 
   btnCancelar() {
     this.formGroup.reset();
-    this.formulario.resetForm();
     this.agregarDialog = false;
   }
 
   btnCancelarM() {
     this.formGroup.reset();
-    this.formulario.resetForm();
     this.modificarDialog = false;
   }
 
