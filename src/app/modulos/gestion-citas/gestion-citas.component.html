@@ -1,6 +1,6 @@
 <div class="100vh w-100 d-flex flex-column p-4 fondo">
   <div class="card w-100 agregar-citas mb-2">
-    <form [formGroup]="formGroup" class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+    <form #formulario [formGroup]="formGroup" class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
       <div class="w-100 h-75 d-flex flex-col justify-content-center align-items-center">
         <mat-form-field class="m-2">
           <mat-label>Fecha</mat-label>
@@ -38,7 +38,7 @@
     </form>
   </div>
   <div class="card w-100 tabla-citas overflow-hidden">
-    <p-table #dataTable [value]="citas" [paginator]="true"
+    <p-table #dataTable [value]="ordenarCitasPorFecha(citas)" [paginator]="true"
     [rows]="5"
     [showCurrentPageReport]="true"
     [tableStyle]="{ 'min-width': '50rem' }"
@@ -58,16 +58,20 @@
         <tr>
           <td>CT-{{cita.id}}</td>
           <td>{{cita.fecha_hora}}</td>
-          <td>{{nombreFormato(obtenerPacienteCita(cita.paciente_id))}}</td>
+          <td>
+            {{nombreFormato(obtenerPacienteCita(cita.paciente_id))}}
+          </td>
           <td>{{nombreFormato(obtenerOdonCita(cita.doctor_id))}}</td>
           <td><p-tag [value]="getEstatus(cita.estatus)" [severity]="getSeverity(cita.estatus)"></p-tag></td>
           <td class="d-flex flex-row">
-            <button type="button" pButton pRipple icon="pi pi-pencil"
+            <!-- <button type="button" pButton pRipple icon="pi pi-eye" matTooltip="Ver"
+            class="p-button-rounded p-button-info m-2" (click)="verCita(cita)"></button> -->
+            <button type="button" pButton pRipple icon="pi pi-pencil" matTooltip="Editar"
               class="p-button-rounded p-button-warning m-2" (click)="editarCita(cita)"></button>
-            <button type="button" pButton pRipple icon="pi pi-whatsapp"
+            <button type="button" pButton pRipple icon="pi pi-whatsapp" matTooltip="Notificar"
               class="p-button-rounded p-button-success m-2"></button>
-            <button type="button" pButton pRipple icon="pi pi-trash"
-              class="p-button-rounded p-button-danger m-2" (click)="eliminarUsuario(cita)"></button>
+            <button type="button" pButton pRipple icon="pi pi-trash" matTooltip="Eliminar"
+              class="p-button-rounded p-button-danger m-2" (click)="deleteCita(cita)"></button>
           </td>
         </tr>
       </ng-template>

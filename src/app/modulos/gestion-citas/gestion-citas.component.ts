@@ -16,7 +16,9 @@ import { Usuario } from 'src/app/services/models/usuario';
 export class GestionCitasComponent implements OnInit {
 
   editar = false;
-  @ViewChild('dataTable') dataTable: any;
+  @ViewChild('dataTable', { static: true }) dataTable: any;
+  @ViewChild('formulario') formulario: any;
+
 
   fechaMinima = new Date();
   citas: Cita[] = [];
@@ -177,7 +179,7 @@ export class GestionCitasComponent implements OnInit {
     this.cita = citaE;
     this.editar = true;
     this.formGroup.get('id')?.setValue(citaE.id);
-    this.formGroup.get('fecha')?.setValue(citaE.fecha_hora.substring(0, 10));
+    this.formGroup.get('fecha')?.setValue(this.normalizeDate(this.cita.fecha_hora));
     this.formGroup.get('hora')?.setValue(citaE.fecha_hora.substring(11, 16));
     this.formGroup.get('estatus')?.setValue(citaE.estatus);
     this.formGroup.get('paciente_id')?.setValue(citaE.paciente_id);
@@ -202,6 +204,7 @@ export class GestionCitasComponent implements OnInit {
 
   cancelar() {
     this.formGroup.reset();
+    this.formulario.resetForm();
     this.editar = false;
   }
 
@@ -221,9 +224,15 @@ export class GestionCitasComponent implements OnInit {
     return format(fechaTemp, 'yyyy-MM-dd');
   }
 
+  normalizeDate(date: any): Date {
+    const normalizedDate = new Date(date);
+    normalizedDate.setHours(12, 0, 0, 0);
+    return normalizedDate;
+  }
+
   crearCita(){
     this.apiService.createCita(this.cita).subscribe(res => {
-      this.citas.push(res)
+      this.citas.push(res);
     });
   }
 
@@ -235,11 +244,24 @@ export class GestionCitasComponent implements OnInit {
     });
   }
 
-  eliminarUsuario(cita: Cita) {
+  deleteCita(cita: Cita) {
     if (confirm(`Desea eliminar la cita ${cita.fecha_hora}?`)) {
-      this.apiService.deleteUsuario(cita.id).subscribe(() => {
+      this.apiService.deleteCita(cita.id).subscribe(() => {
         this.citas = this.citas.filter((u) => u.id !== cita.id);
       });
     }
   }
+
+  ordenarCitasPorFecha(citas: Cita[]): Cita[] {
+    return citas.sort((a, b) => {
+      const fechaA = new Date(a.fecha_hora);
+      const fechaB = new Date(b.fecha_hora);
+      return fechaA.getTime() - fechaB.getTime();
+    });
+  }
+
+  verCita(cita:Cita){
+
+  }
+
 }

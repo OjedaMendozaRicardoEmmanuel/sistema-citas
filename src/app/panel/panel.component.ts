@@ -10,7 +10,7 @@ import { switchMap } from 'rxjs';
   styleUrls: ['./panel.component.css'],
 })
 export class PanelComponent implements OnInit {
-  imgPerfil = '../assets/img/perfil.png';
+  imgPerfil = '';
   user = 'Ricardo';
   tipoUsuario: string = 'admin';
   modulos: any = [];
@@ -124,6 +124,7 @@ export class PanelComponent implements OnInit {
       console.log(this.tipoUsuario);
       this.user = this.usuario.nombre;
       this.modulosActivos();
+      this.imgPerfil = `../assets/img/${this.tipoUsuario}.png`;
     });
   }
 

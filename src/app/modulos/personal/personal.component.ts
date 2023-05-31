@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import * as moment from 'moment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -23,6 +23,8 @@ export class PersonalComponent implements OnInit {
   rol: any = { roles_id: 2 };
 
   isEmailDisabled: boolean = true;
+
+  @ViewChild('formulario') formulario: any;
 
 
   valCorreo: any =
@@ -115,11 +117,13 @@ export class PersonalComponent implements OnInit {
 
   btnCancelar() {
     this.formGroup.reset();
+    this.formulario.resetForm();
     this.agregarDialog = false;
   }
 
   btnCancelarM() {
     this.formGroup.reset();
+    this.formulario.resetForm();
     this.modificarDialog = false;
   }
 

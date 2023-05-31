@@ -55,7 +55,7 @@
   </div>
   <p-dialog [(visible)]="agregarDialog" [style]="{width: '30%', height: '80%'}" header="Agregar paciente" [modal]="true"
     class="p-fluid">
-    <form [formGroup]="formGroup">
+    <form #formulario [formGroup]="formGroup">
       <mat-form-field class="w-100">
         <mat-label>Nombre</mat-label>
         <input matInput formControlName="nombre">
@@ -95,7 +95,7 @@
   </p-dialog>
   <p-dialog [(visible)]="modificarDialog" [style]="{width: '30%', height: '80%'}" header="Modificar paciente"
     [modal]="true" class="p-fluid">
-    <form [formGroup]="formGroup">
+    <form #formulario [formGroup]="formGroup">
       <mat-form-field class="w-100">
         <mat-label>Nombre</mat-label>
         <input matInput formControlName="nombre">

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import * as moment from 'moment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -22,6 +22,7 @@ export class OdontologosComponent {
   rol: any = { roles_id: 5 };
 
   isEmailDisabled: boolean = true;
+  @ViewChild('formulario') formulario: any;
 
   constructor(
     private messageService: MessageService,
@@ -104,11 +105,13 @@ export class OdontologosComponent {
 
   btnCancelar() {
     this.formGroup.reset();
+    this.formulario.resetForm();
     this.agregarDialog = false;
   }
 
   btnCancelarM() {
     this.formGroup.reset();
+    this.formulario.resetForm();
     this.modificarDialog = false;
   }
 

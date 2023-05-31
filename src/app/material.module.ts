@@ -26,6 +26,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -54,6 +55,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatCheckboxModule,
     MatSlideToggleModule,
     MatAutocompleteModule,
+    MatTooltipModule,
   ],
   exports: [
     InputTextModule,
@@ -80,6 +82,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatCheckboxModule,
     MatSlideToggleModule,
     MatAutocompleteModule,
+    MatTooltipModule,
   ],
 })
 export class MaterialModule {}
