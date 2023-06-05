@@ -85,29 +85,20 @@ export class PanelComponent implements OnInit {
     },
     {
       id: 9,
-      nombre: 'Pagos',
-      icon: 'bi bi-credit-card-2-back-fill',
+      nombre: 'Expedientes',
+      icon: 'bi bi-folder-fill',
       estado: 'desactivado',
       rol: 'Odontologo',
     },
-    {
-      id: 10,
-      nombre: 'Ajustes',
-      icon: 'bi bi-gear-fill',
-      estado: 'desactivado',
-      rol: 'all',
-    },
   ];
+
+  horaActual: string = '';
 
   constructor(
     private apiService: ApiService,
     private router: Router
   ) {
 
-    // console.log(this.compartirDatos);
-    // this.usuario = compartirDatos.getUser();
-    // this.tipoUsuario = this.usuario.rol;
-    // this.user = this.usuario.usuario;
   }
 
   ngOnInit(): void {
@@ -121,15 +112,18 @@ export class PanelComponent implements OnInit {
     )
     .subscribe((resultado) => {
       this.tipoUsuario = resultado[0].nombre;
-      console.log(this.tipoUsuario);
       this.user = this.usuario.nombre;
       this.modulosActivos();
       this.imgPerfil = `../assets/img/${this.tipoUsuario}.png`;
     });
+
+    this.obtenerHoraActual();
+    setInterval(() => {
+      this.obtenerHoraActual();
+    }, 1000);
   }
 
   botonPresionado(id: number) {
-    console.log('El botón con id ' + id + ' ha sido presionado.');
     this.permisos.forEach((element) => {
       if (element.id === id) {
         element.estado = 'activado';
@@ -142,9 +136,7 @@ export class PanelComponent implements OnInit {
 
   modulosActivos() {
     this.permisos.forEach((element) => {
-      if (element.rol === this.tipoUsuario) {
-        this.modulos.push(element);
-      } else if (element.rol === this.tipoUsuario) {
+      if (element.nombre === 'Pacientes' && this.tipoUsuario === 'Personal') {
         this.modulos.push(element);
       } else if (element.rol === this.tipoUsuario) {
         this.modulos.push(element);
@@ -157,5 +149,10 @@ export class PanelComponent implements OnInit {
   cerrarSesion() {
     this.apiService.logout();
     this.router.navigate(['login']);
+  }
+
+  obtenerHoraActual(): void {
+    const fecha = new Date();
+    this.horaActual = fecha.toLocaleTimeString();
   }
 }

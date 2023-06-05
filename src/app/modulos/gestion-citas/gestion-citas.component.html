@@ -1,17 +1,19 @@
 <div class="100vh w-100 d-flex flex-column p-4 fondo">
   <div class="card w-100 agregar-citas mb-2">
-    <form #formulario [formGroup]="formGroup" class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+    <form #formulario [formGroup]="formGroup"
+      class="w-100 h-100 d-flex flex-column justify-content-center align-items-center">
       <div class="w-100 h-75 d-flex flex-col justify-content-center align-items-center">
         <mat-form-field class="m-2">
           <mat-label>Fecha</mat-label>
-          <input matInput [matDatepicker]="picker" placeholder="Selecciona una fecha" [min]="fechaMinima" formControlName="fecha">
+          <input matInput [matDatepicker]="picker" placeholder="Selecciona una fecha" [min]="fechaMinima"
+            formControlName="fecha" (dateInput)="onFechaSeleccionada($event)">
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
         <mat-form-field class="m-2">
-          <mat-label>Selecciona una hora</mat-label>
+          <mat-label>Hora</mat-label>
           <mat-select formControlName="hora">
-            <mat-option *ngFor="let hora of horas" [value]="hora">{{ hora }}</mat-option>
+            <mat-option *ngFor="let hora of horas" [value]="hora.hora"  [disabled]="!hora.enable">{{ hora.hora }}</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field class="m-2 w-25">
@@ -32,18 +34,18 @@
         </mat-form-field>
       </div>
       <div class="w-100 h-25 d-flex flex-col justify-content-end pe-5">
-      <button mat-raised-button color="primary" class="me-2" (click)="guardar()">{{ editar ? "Guardar ": "Agendar Cita"}}</button>
-      <button mat-raised-button color="warn" class="me-5" (click)="cancelar()">Cancelar</button>
+        <button mat-raised-button color="primary" class="me-2" (click)="guardar()">
+          {{ editar ? "Guardar ": "Agendar Cita"}}
+        </button>
+        <button mat-raised-button color="warn" class="me-5" (click)="cancelar()">Cancelar</button>
       </div>
     </form>
   </div>
   <div class="card w-100 tabla-citas overflow-hidden">
-    <p-table #dataTable [value]="ordenarCitasPorFecha(citas)" [paginator]="true"
-    [rows]="5"
-    [showCurrentPageReport]="true"
-    [tableStyle]="{ 'min-width': '50rem' }"
-    currentPageReportTemplate="{last} de {totalRecords}"
->
+    <p-toast position="top-center" class="rounded"></p-toast>
+    <p-table #dataTable [value]="ordenarCitasPorFecha(citas)" [paginator]="true" [rows]="5"
+      [showCurrentPageReport]="true" [tableStyle]="{ 'min-width': '50rem' }"
+      currentPageReportTemplate="{last} de {totalRecords}">
       <ng-template pTemplate="header" let-columns>
         <tr>
           <th>ID</th>
@@ -64,14 +66,14 @@
           <td>{{nombreFormato(obtenerOdonCita(cita.doctor_id))}}</td>
           <td><p-tag [value]="getEstatus(cita.estatus)" [severity]="getSeverity(cita.estatus)"></p-tag></td>
           <td class="d-flex flex-row">
-            <!-- <button type="button" pButton pRipple icon="pi pi-eye" matTooltip="Ver"
-            class="p-button-rounded p-button-info m-2" (click)="verCita(cita)"></button> -->
-            <button type="button" pButton pRipple icon="pi pi-pencil" matTooltip="Editar"
+            <button type="button" [disabled]="cita.estatus != 1" pButton pRipple icon="pi pi-pencil" matTooltip="Editar"
               class="p-button-rounded p-button-warning m-2" (click)="editarCita(cita)"></button>
-            <button type="button" pButton pRipple icon="pi pi-whatsapp" matTooltip="Notificar"
-              class="p-button-rounded p-button-success m-2"></button>
-            <button type="button" pButton pRipple icon="pi pi-trash" matTooltip="Eliminar"
+            <button type="button" [disabled]="cita.estatus != 1" pButton pRipple icon="pi pi-bell" matTooltip="Notificar"
+              class="p-button-rounded p-button-info m-2" (click)="verCita(cita)"></button>
+            <button type="button" [disabled]="cita.estatus != 1" pButton pRipple icon="pi pi-ban" matTooltip="Cancelar"
               class="p-button-rounded p-button-danger m-2" (click)="deleteCita(cita)"></button>
+              <button type="button" [disabled]="cita.estatus != 1" pButton pRipple icon="pi pi-check" matTooltip="Confirmar"
+                class="p-button-rounded p-button-success m-2" (click)="confirmarCita(cita)"></button>
           </td>
         </tr>
       </ng-template>

@@ -28,6 +28,7 @@ import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { ApiService } from './services/api.service';
+import { ExpedientesComponent } from './modulos/expedientes/expedientes.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { ApiService } from './services/api.service';
     AjustesComponent,
     GestionCitasComponent,
     ReportesComponent,
+    ExpedientesComponent,
   ],
   imports: [
     BrowserModule,

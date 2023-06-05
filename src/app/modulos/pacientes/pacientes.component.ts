@@ -21,9 +21,6 @@ export class PacientesComponent {
 
   @ViewChild('dataTable') dataTable: any;
 
-  valCorreo: any =
-    /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
-
   constructor(
     private messageService: MessageService,
     private apiService: ApiService
@@ -35,7 +32,7 @@ export class PacientesComponent {
       id: new FormControl(''),
       nombre: new FormControl('', [Validators.required]),
       apellidop: new FormControl('', [Validators.required]),
-      apellidom: new FormControl('', [Validators.required]),
+      apellidom: new FormControl(''),
       genero: new FormControl('', [Validators.required]),
       fecha_nacimiento: new FormControl('', [Validators.required]),
       correo: new FormControl('', [Validators.required, Validators.email]),
@@ -72,6 +69,11 @@ export class PacientesComponent {
         this.pacientes.push(res);
         this.refreshTable()
         this.agregarDialog = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Se agrego un nuevo registro',
+          detail: 'PX-'+res.id,
+        });
       });
     }
   }
@@ -117,6 +119,11 @@ export class PacientesComponent {
     this.apiService.updatePaciente(px.id, px).subscribe((updatedUser) => {
       const index = this.pacientes.findIndex((u) => u.id === updatedUser.id);
       this.pacientes[index] = updatedUser;
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Se actualizaron los datos',
+        detail: 'PX-'+updatedUser.id,
+      });
     });
   }
 
@@ -126,8 +133,9 @@ export class PacientesComponent {
       this.messageService.add({
         severity: 'warn',
         summary: 'Eliminado correctamente',
-        detail: px.nombre,
+        detail: 'PX-'+px.id,
       });
     });
   }
+
 }

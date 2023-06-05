@@ -3,12 +3,17 @@
     <div class="div-user d-flex justify-content-center flex-column">
       <img src="{{imgPerfil}}" alt="" class="img-fluid img-thumbnail rounded-circle mx-auto d-block w-50 mt-2">
       <p class="text-center">Bienvenido <b>{{user}}</b>!</p>
+      <div class="mb-2 d-flex justify-content-center align-items-center" style="font-size: 1.5rem">
+        <i class="pi pi-clock me-2 text-danger" style="font-size: 1.5rem"></i>
+        {{horaActual}}
+      </div>
     </div>
     <div class="modulos">
       <ul>
         <li *ngFor="let item of modulos"><button class="{{item.estado}}" (click)="botonPresionado(item.id)">
           <i class="{{item.icon}}"></i>
           {{item.nombre}}
+          <!-- <span style="font-size: 1.5rem">{{item.nombre}}</span> -->
         </button></li>
       </ul>
       <button class="position-absolute bottom-0 end-0 salir" (click)="cerrarSesion()">
@@ -27,7 +32,7 @@
       <app-reportes *ngIf="moduloEnable===6" class="modulo-activo"></app-reportes>
       <app-citas *ngIf="moduloEnable===7" class="modulo-activo"></app-citas>
       <app-historial *ngIf="moduloEnable===8" class="modulo-activo"></app-historial>
-      <app-pagos *ngIf="moduloEnable===9" class="modulo-activo"></app-pagos>
+      <app-expedientes *ngIf="moduloEnable===9" class="modulo-activo"></app-expedientes>
       <app-ajustes *ngIf="moduloEnable===10" class="modulo-activo"></app-ajustes>
     </div>
   </main>

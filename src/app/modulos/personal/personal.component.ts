@@ -37,7 +37,7 @@ export class PersonalComponent implements OnInit {
       id: new FormControl(0),
       nombre: new FormControl('', [Validators.required]),
       apellidop: new FormControl('', [Validators.required]),
-      apellidom: new FormControl('', [Validators.required]),
+      apellidom: new FormControl(''),
       email: new FormControl('', [Validators.required, Validators.email]),
       genero: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
@@ -78,6 +78,11 @@ export class PersonalComponent implements OnInit {
         this.personal.push(res);
         this.agregarRol(res.id,this.rol);
         this.agregarDialog = false;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Se realizo un nuevo registro',
+          detail: 'ID: PER-'+res.id,
+        });
       });
     }
   }
@@ -101,7 +106,7 @@ export class PersonalComponent implements OnInit {
         this.messageService.add({
           severity: 'warn',
           summary: 'Eliminado correctamente',
-          detail: personal.nombre,
+          detail: 'ID: PER-'+personal.id,
         });
       });
     }
@@ -134,6 +139,20 @@ export class PersonalComponent implements OnInit {
     this.apiService.updateUsuario(user.id, user).subscribe(updatedUser => {
       const index = this.personal.findIndex(u => u.id === updatedUser.id);
       this.personal[index] = updatedUser;
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Se actualizaron los datos',
+        detail: 'ID: PER-'+updatedUser.id,
+      });
     });
   }
+
+  emailExiste:boolean = false;
+  existeEmail() {
+    const email = this.formGroup.get('email')?.value;
+    const emailRegistrado = this.personal.some(persona => persona.email === email);
+    this.emailExiste = emailRegistrado;
+  }
+
+
 }

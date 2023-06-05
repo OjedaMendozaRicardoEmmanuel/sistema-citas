@@ -11,7 +11,7 @@
     </div>
   </p-toolbar>
   <div class="card rounded d-flex justify-content-center align-items-center shadow">
-    <p-toast position="top-right" class="rounded"></p-toast>
+    <p-toast position="top-center" class="rounded"></p-toast>
     <p-table [value]="odontologos" [tableStyle]="{ 'min-width': '50rem' }">
       <ng-template pTemplate="header">
         <tr>
@@ -19,7 +19,7 @@
           <th>Nombre</th>
           <th>Apellidos</th>
           <th>Email</th>
-          <th>Genero</th>
+          <th>Género</th>
           <th>Estatus</th>
           <th style="width: 3rem">Acciones</th>
         </tr>
@@ -48,19 +48,24 @@
     <form #formulario [formGroup]="formGroup" class="d-flex flex-column justify-content-center align-content-center">
       <mat-form-field class="w-100">
         <mat-label>Nombre</mat-label>
-        <input matInput formControlName="nombre">
+        <input matInput formControlName="nombre" onkeydown="return /[a-zA-ZñÑá-úÁ-Ú, ]/i.test(event.key)">
       </mat-form-field>
       <mat-form-field class="w-100">
         <mat-label>Primer Apellido</mat-label>
-        <input matInput formControlName="apellidop">
+        <input matInput formControlName="apellidop" onkeydown="return /[a-zA-ZñÑá-úÁ-Ú, ]/i.test(event.key)">
       </mat-form-field>
       <mat-form-field class="w-100">
         <mat-label>Segundo Apellido</mat-label>
-        <input matInput formControlName="apellidom">
+        <input matInput formControlName="apellidom" onkeydown="return /[a-zA-ZñÑá-úÁ-Ú, ]/i.test(event.key)">
       </mat-form-field>
       <mat-form-field class="w-100">
         <mat-label>Email</mat-label>
-        <input matInput formControlName="email">
+        <input matInput formControlName="email" (input)="existeEmail()">
+        <div *ngIf="emailExiste">
+          <mat-error>
+            Este correo ya esta registrado
+          </mat-error>
+        </div>
       </mat-form-field>
       <mat-form-field class="w-100">
         <mat-label>Password</mat-label>
@@ -70,7 +75,7 @@
         </button>
       </mat-form-field>
       <div class="w-100 my-2">
-        <label id="radio-group">Genero:</label>
+        <label id="radio-group">Género:</label>
         <mat-radio-group formControlName="genero" id="radio-group">
           <mat-radio-button value="Masculino" >Masculino</mat-radio-button>
           <mat-radio-button value="Femenino">Femenino</mat-radio-button>
@@ -87,15 +92,15 @@
     <form #formulario [formGroup]="formGroup">
       <mat-form-field class="w-100">
         <mat-label>Nombre</mat-label>
-        <input matInput formControlName="nombre">
+        <input matInput formControlName="nombre" onkeydown="return /[a-zA-ZñÑá-úÁ-Ú, ]/i.test(event.key)">
       </mat-form-field>
       <mat-form-field class="w-100">
         <mat-label>Primer Apellido</mat-label>
-        <input matInput formControlName="apellidop">
+        <input matInput formControlName="apellidop" onkeydown="return /[a-zA-ZñÑá-úÁ-Ú, ]/i.test(event.key)">
       </mat-form-field>
       <mat-form-field class="w-100">
         <mat-label>Segundo Apellido</mat-label>
-        <input matInput formControlName="apellidom">
+        <input matInput formControlName="apellidom" onkeydown="return /[a-zA-ZñÑá-úÁ-Ú, ]/i.test(event.key)">
       </mat-form-field>
       <mat-form-field class="w-100">
         <mat-label>Email</mat-label>
@@ -109,7 +114,7 @@
         </button>
       </mat-form-field>
       <div class="w-100 my-1">
-        <label id="radio-group">Genero:</label>
+        <label id="radio-group">Género:</label>
         <mat-radio-group formControlName="genero" id="radio-group">
           <mat-radio-button value="Masculino" >Masculino</mat-radio-button>
           <mat-radio-button value="Femenino">Femenino</mat-radio-button>

@@ -35,7 +35,7 @@ export class OdontologosComponent {
       id: new FormControl(0),
       nombre: new FormControl('', [Validators.required]),
       apellidop: new FormControl('', [Validators.required]),
-      apellidom: new FormControl('', [Validators.required]),
+      apellidom: new FormControl(''),
       email: new FormControl('', [Validators.required, Validators.email]),
       genero: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
@@ -85,12 +85,12 @@ export class OdontologosComponent {
 
   eliminarUsuario(personal: Usuario) {
     if (confirm(`Desea eliminar al odontólogo ${personal.nombre}?`)) {
-      this.apiService.deleteUsuario(personal.id).subscribe(() => {
+      this.apiService.deleteUsuario(personal.id).subscribe((res) => {
         this.odontologos = this.odontologos.filter((u) => u.id !== personal.id);
         this.messageService.add({
           severity: 'warn',
           summary: 'Eliminado correctamente',
-          detail: personal.nombre,
+          detail: 'ID: ODT-' + res.id,
         });
       });
     }
@@ -126,12 +126,30 @@ export class OdontologosComponent {
     this.apiService.updateUsuario(user.id, user).subscribe((updatedUser) => {
       const index = this.odontologos.findIndex((u) => u.id === updatedUser.id);
       this.odontologos[index] = updatedUser;
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Se actualizaron los datos',
+        detail: 'ID: ODT-' + updatedUser.id,
+      });
     });
   }
 
   agregarOdo(id_user:number){
     const odo:Doctor = {id:0, cedula:'',usuarios_id:id_user};
-    this.apiService.createDoctor(odo).subscribe(res => console.log(res)
-    );
+    this.apiService.createDoctor(odo).subscribe(res => {
+      console.log(res);
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Se agrego un nuevo registro',
+        detail: 'ID: ODT-' + res.id,
+      });
+    });
+  }
+
+  emailExiste:boolean = false;
+  existeEmail() {
+    const email = this.formGroup.get('email')?.value;
+    const emailRegistrado = this.odontologos.some(odo => odo.email === email);
+    this.emailExiste = emailRegistrado;
   }
 }

@@ -1,1 +1,71 @@
-<p>citas works!</p>
+<div class="d-flex justify-content-center align-content-center fondo flex-column p-5">
+  <div class="card w-100 card-1 shadow p-4 d-flex flex-row">
+    <div class="position-relative w-25 h-100 p-2">
+      <mat-card class="w-100 h-100 border ">
+        <mat-card-header class="fs-3 border-bottom">
+          <mat-card-title class="text-center">
+            <i class="bi bi-calendar-date-fill"></i>
+            Citas
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="fs-4 d-flex flex-row mt-3">
+          <div class="text-success d-flex text-center flex-column w-50">
+            <p>Confirmadas</p>
+            <p>
+              <i class="bi bi-check-circle"></i>
+              {{citasConfirmadas}}
+            </p>
+          </div>
+          <div class="text-danger d-flex text-center flex-column w-50">
+            <p>Pendientes</p>
+            <p>
+              <i class="bi bi-clock-history"></i>
+              {{citasPendientes}}
+            </p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="w-75 h-100 p-2">
+      <mat-card class="w-100 h-100 border">
+        <mat-card-header class="fs-3 border-bottom">
+          <mat-card-title class="text-center">
+            <i class="bi bi-calendar-check-fill"></i>
+            Próxima Cita
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="fs-4 d-flex flex-row mt-3">
+          <div class="display-2">
+            <i class="bi bi-person-lines-fill"></i>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="card w-100 card-2 shadow p-4 d-flex flex-row mt-4">
+    <div class="position-relative w-50 h-100 p-2">
+      <mat-card class="w-100 h-100 border">
+        <mat-card-header class="fs-3 border-bottom">
+          <mat-card-title class="text-center">
+            <i class="bi bi-people-fill"></i>
+            Mis Pacientes
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="fs-4 d-flex flex-row mt-3">
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="position-relative w-50 h-100 p-2">
+      <mat-card class="w-100 h-100 border">
+        <mat-card-header class="fs-3 border-bottom">
+          <mat-card-title class="text-center">
+            <i class="bi bi-calendar-minus-fill"></i>
+            Citas
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="fs-4 d-flex flex-row mt-3">
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

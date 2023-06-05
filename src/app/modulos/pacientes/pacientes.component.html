@@ -11,13 +11,9 @@
     </div>
   </p-toolbar>
   <div class="card rounded d-flex justify-content-center align-items-center shadow">
-    <p-toast position="top-right" class="rounded"></p-toast>
-    <p-table #dataTable [value]="pacientes" [paginator]="true"
-    [rows]="7"
-    [showCurrentPageReport]="true"
-    [tableStyle]="{ 'min-width': '50rem' }"
-    currentPageReportTemplate="{last} de {totalRecords}"
->
+    <p-toast position="top-center" class="rounded"></p-toast>
+    <p-table #dataTable [value]="pacientes" [paginator]="true" [rows]="7" [showCurrentPageReport]="true"
+      [tableStyle]="{ 'min-width': '50rem' }" currentPageReportTemplate="{last} de {totalRecords}">
       <ng-template pTemplate="header">
         <tr>
           <th>ID</th>
@@ -25,7 +21,7 @@
           <th>Apellidos</th>
           <th>Fecha De Nacimiento</th>
           <th>Edad</th>
-          <th>Genero</th>
+          <th>Género</th>
           <th>Telefono</th>
           <th>Correo</th>
           <th>Estatus</th>
@@ -58,15 +54,15 @@
     <form #formulario [formGroup]="formGroup">
       <mat-form-field class="w-100">
         <mat-label>Nombre</mat-label>
-        <input matInput formControlName="nombre">
+        <input matInput formControlName="nombre" onkeydown="return /[a-zA-ZñÑá-úÁ-Ú, ]/i.test(event.key)">
       </mat-form-field>
       <mat-form-field class="w-100">
         <mat-label>Primer Apellido</mat-label>
-        <input matInput formControlName="apellidop">
+        <input matInput formControlName="apellidop" onkeydown="return /[a-zA-ZñÑá-úÁ-Ú, ]/i.test(event.key)">
       </mat-form-field>
       <mat-form-field class="w-100">
         <mat-label>Segundo Apellido</mat-label>
-        <input matInput formControlName="apellidom">
+        <input matInput formControlName="apellidom" onkeydown="return /[a-zA-ZñÑá-úÁ-Ú, ]/i.test(event.key)">
       </mat-form-field>
       <mat-form-field class="w-100">
         <mat-label>Fecha Nacimiento</mat-label>
@@ -78,12 +74,13 @@
       </mat-form-field>
       <mat-form-field class="w-100">
         <mat-label>Telefono</mat-label>
-        <input matInput formControlName="telefono">
+        <input matInput formControlName="telefono" maxlength="10"
+          onkeydown="return /[0-9]/i.test(event.key) || event.keyCode === 8 || event.keyCode === 46">
       </mat-form-field>
       <div class="w-100 my-2">
-        <label id="radio-group">Genero:</label>
+        <label id="radio-group">Género:</label>
         <mat-radio-group formControlName="genero" id="radio-group">
-          <mat-radio-button value="Masculino" >Masculino</mat-radio-button>
+          <mat-radio-button value="Masculino">Masculino</mat-radio-button>
           <mat-radio-button value="Femenino">Femenino</mat-radio-button>
         </mat-radio-group>
       </div>
@@ -121,9 +118,9 @@
         <input matInput formControlName="telefono">
       </mat-form-field>
       <div class="w-100 my-2">
-        <label id="radio-group">Genero:</label>
+        <label id="radio-group">Género:</label>
         <mat-radio-group formControlName="genero" id="radio-group">
-          <mat-radio-button value="Masculino" >Masculino</mat-radio-button>
+          <mat-radio-button value="Masculino">Masculino</mat-radio-button>
           <mat-radio-button value="Femenino">Femenino</mat-radio-button>
         </mat-radio-group>
       </div>
@@ -132,7 +129,7 @@
       </div>
       <div class="w-75 mt-2">
         <button type="submit" class="btn btn-primary me-2" (click)="modificar()">Guardar</button>
-      <button type="button" class="btn btn-danger" (click)="btnCancelarM()">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="btnCancelarM()">Cancelar</button>
       </div>
     </form>
   </p-dialog>

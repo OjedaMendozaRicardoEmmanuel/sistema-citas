@@ -10,6 +10,7 @@ import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { TagModule } from 'primeng/tag';
+import { TabViewModule } from 'primeng/tabview';
 
 //AngularMaterial
 import { MatButtonModule } from '@angular/material/button';
@@ -23,11 +24,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatTooltipModule} from '@angular/material/tooltip';
-
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTabsModule } from '@angular/material/tabs';
+import {MatCardModule} from '@angular/material/card';
 
 @NgModule({
   imports: [
@@ -56,6 +58,9 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatSlideToggleModule,
     MatAutocompleteModule,
     MatTooltipModule,
+    TabViewModule,
+    MatTabsModule,
+    MatCardModule,
   ],
   exports: [
     InputTextModule,
@@ -83,6 +88,9 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     MatSlideToggleModule,
     MatAutocompleteModule,
     MatTooltipModule,
+    TabViewModule,
+    MatTabsModule,
+    MatCardModule,
   ],
 })
 export class MaterialModule {}

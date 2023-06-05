@@ -1,0 +1,12 @@
+.fondo {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background-color: #DCD6F7;
+}
+
+.tap{
+  position: relative;
+  width: 95%;
+  height: 95%;
+}

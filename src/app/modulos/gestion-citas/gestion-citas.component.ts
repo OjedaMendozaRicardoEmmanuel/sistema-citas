@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { format } from 'date-fns';
+import { MessageService } from 'primeng/api';
 import { forkJoin } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
 import { Cita } from 'src/app/services/models/cita';
@@ -12,30 +13,29 @@ import { Usuario } from 'src/app/services/models/usuario';
   selector: 'app-gestion-citas',
   templateUrl: './gestion-citas.component.html',
   styleUrls: ['./gestion-citas.component.css'],
+  providers: [MessageService],
 })
 export class GestionCitasComponent implements OnInit {
-
   editar = false;
   @ViewChild('dataTable', { static: true }) dataTable: any;
   @ViewChild('formulario') formulario: any;
-
 
   fechaMinima = new Date();
   citas: Cita[] = [];
   odontologos: Doctor[] = [];
   pacientes: Paciente[] = [];
   usuarios: Usuario[] = [];
-  horas: string[] = [
-    '08:00',
-    '09:00',
-    '10:00',
-    '11:00',
-    '12:00',
-    '13:00',
-    '14:00',
-    '15:00',
-    '16:00',
-    '17:00',
+  horas: any[] = [
+    {hora:'08:00', enable:true},
+    {hora:'09:00', enable:true},
+    {hora:'10:00', enable:true},
+    {hora:'11:00', enable:true},
+    {hora:'12:00', enable:true},
+    {hora:'13:00', enable:true},
+    {hora:'14:00', enable:true},
+    {hora:'15:00', enable:true},
+    {hora:'16:00', enable:true},
+    {hora:'17:00', enable:true},
   ];
   horaSeleccionada: string = '';
   usuario: Usuario = {
@@ -58,7 +58,10 @@ export class GestionCitasComponent implements OnInit {
     usuarios_id: 0,
   };
 
-  constructor(private apiService: ApiService) {
+  constructor(
+    private messageService: MessageService,
+    private apiService: ApiService
+  ) {
     this.formGroup = new FormGroup({
       id: new FormControl(0),
       fecha: new FormControl('', [Validators.required]),
@@ -69,11 +72,10 @@ export class GestionCitasComponent implements OnInit {
       usuarios_id: new FormControl(this.usuario.id, [Validators.required]),
     });
     setTimeout(() => {
-      apiService.getProfile().subscribe( res => {
+      apiService.getProfile().subscribe((res) => {
         this.usuario = res;
-        console.log(this.usuario);
       });
-      }, 200);
+    }, 200);
   }
 
   ngOnInit(): void {
@@ -93,7 +95,6 @@ export class GestionCitasComponent implements OnInit {
       this.odontologos = odontologos;
       this.usuarios = usuarios;
     });
-
   }
 
   // Método para refrescar la tabla
@@ -131,27 +132,27 @@ export class GestionCitasComponent implements OnInit {
 
   getSeverity(status: string) {
     switch (status) {
-      case 'INSTOCK':
+      case '1':
+        return 'info';
+      case '2':
         return 'success';
-      case 'LOWSTOCK':
-        return 'warning';
-      case 'OUTOFSTOCK':
+      case '3':
         return 'danger';
       default:
         return 'info';
     }
   }
 
-  getEstatus(id: number) {
-    switch (id) {
-      case 1:
+  getEstatus(status: string) {
+    switch (status) {
+      case '1':
         return 'Pendiente';
-      case 2:
+      case '2':
         return 'Confirmada';
-      case 3:
-        return 'Finalizada';
+      case '3':
+        return 'Cancelada';
       default:
-        return 'Pendiente';
+        return 'info';
     }
   }
 
@@ -179,7 +180,9 @@ export class GestionCitasComponent implements OnInit {
     this.cita = citaE;
     this.editar = true;
     this.formGroup.get('id')?.setValue(citaE.id);
-    this.formGroup.get('fecha')?.setValue(this.normalizeDate(this.cita.fecha_hora));
+    this.formGroup
+      .get('fecha')
+      ?.setValue(this.normalizeDate(this.cita.fecha_hora));
     this.formGroup.get('hora')?.setValue(citaE.fecha_hora.substring(11, 16));
     this.formGroup.get('estatus')?.setValue(citaE.estatus);
     this.formGroup.get('paciente_id')?.setValue(citaE.paciente_id);
@@ -189,33 +192,47 @@ export class GestionCitasComponent implements OnInit {
   }
 
   guardar() {
-    if (this.formGroup.valid) {
+    this.asignarDatosCita(this.formGroup);
+    if (this.formGroup.valid && !this.existeFechaHora(this.cita)) {
       if (this.editar) {
-        this.asignarDatosCita(this.formGroup);
-        console.log(this.cita);
         this.updateCita(this.cita);
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Se modifico la cita!',
+          detail: 'ID: CT-'+this.cita.id,
+        });
       } else {
-        this.asignarDatosCita(this.formGroup);
         this.crearCita();
       }
       this.dataTable.reset();
+    } else {
+      alert(`La fecha: ${this.cita.fecha_hora} no esta disponible`);
     }
   }
 
   cancelar() {
-    this.formGroup.reset();
-    this.formulario.resetForm();
     this.editar = false;
+    this.horas.forEach(
+      h => {
+        h.enable = true;
+      }
+    );
+    this.formGroup.reset();
+    this.formulario.reset();
   }
 
   asignarDatosCita(form: FormGroup) {
     this.cita = {
       id: form.get('id')?.value,
-      fecha_hora: this.obtenerFechaF(form.get('fecha')?.value) + ' ' + form.get('hora')?.value,
+      fecha_hora:
+        this.obtenerFechaF(form.get('fecha')?.value) +
+        ' ' +
+        form.get('hora')?.value +
+        ':00',
       estatus: form.get('estatus')?.value,
       paciente_id: form.get('paciente_id')?.value,
       doctor_id: form.get('doctor_id')?.value,
-      usuarios_id: this.usuario.id
+      usuarios_id: this.usuario.id,
     };
   }
 
@@ -230,25 +247,47 @@ export class GestionCitasComponent implements OnInit {
     return normalizedDate;
   }
 
-  crearCita(){
-    this.apiService.createCita(this.cita).subscribe(res => {
+  crearCita() {
+    this.apiService.createCita(this.cita).subscribe((res) => {
       this.citas.push(res);
+
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Se agrego una nueva cita!',
+        detail: 'ID: CT-'+res.id,
+      });
     });
   }
 
   // Actualizar un usuario existente
   updateCita(cita: Cita): void {
-    this.apiService.updateCita(cita.id, cita).subscribe(updateCita => {
-      const index = this.citas.findIndex(u => u.id === updateCita.id);
+    this.apiService.updateCita(cita.id, cita).subscribe((updateCita) => {
+      const index = this.citas.findIndex((u) => u.id === updateCita.id);
       this.citas[index] = updateCita;
     });
   }
 
   deleteCita(cita: Cita) {
-    if (confirm(`Desea eliminar la cita ${cita.fecha_hora}?`)) {
-      this.apiService.deleteCita(cita.id).subscribe(() => {
-        this.citas = this.citas.filter((u) => u.id !== cita.id);
-      });
+    if (confirm(`Desea cancelar la cita ${cita.fecha_hora}?`)) {
+      cita.estatus = 3;
+      this.updateCita(cita);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Se cancelo la cita!',
+          detail: 'ID: CT-'+cita.id,
+        });
+    }
+  }
+
+  confirmarCita(cita: Cita) {
+    if (confirm(`Desea confirmar la cita con id: CT-${cita.id}?`)) {
+      cita.estatus = 2;
+      this.updateCita(cita);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Se confirmo la cita!',
+          detail: 'ID: CT-'+cita.id,
+        });
     }
   }
 
@@ -260,8 +299,25 @@ export class GestionCitasComponent implements OnInit {
     });
   }
 
-  verCita(cita:Cita){
-
+  verCita(cita: Cita) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Se modifico la cita!',
+      detail: '' + cita.id,
+    });
   }
 
+  existeFechaHora(citaN: Cita): boolean {
+    return this.citas.some((cita) => cita.fecha_hora === citaN.fecha_hora);
+  }
+
+  onFechaSeleccionada(event: any){
+    const fecha = this.obtenerFechaF(this.formGroup.get('fecha')?.value);
+    const citas = this.citas.filter( (ct) => fecha === this.obtenerFechaF(ct.fecha_hora));
+    this.horas.forEach(
+      h => {
+        h.enable = !citas.some(ct => ct.fecha_hora.substring(11, 16) == h.hora);
+      }
+    );
+  }
 }

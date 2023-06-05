@@ -1,1 +1,86 @@
-<p>reportes works!</p>
+<div class="fondo d-flex justify-content-center align-content-center p-5">
+  <div class="card w-100 h-100 shadow overflow-hidden">
+    <p-tabView styleClass="tabview-custom">
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          <i class="pi pi-users me-2" style="font-size: 1.5rem"></i>
+          <span>Pacientes</span>
+        </ng-template>
+        <div class="card">
+          <p-table #dt [columns]="colsPacientes" [value]="pacientes" selectionMode="multiple"
+            [(selection)]="selectedPacientes" [exportHeader]="'customExportHeader'"
+            [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="8"
+            currentPageReportTemplate="{last} de {totalRecords}">
+            <ng-template pTemplate="caption">
+              <div class="flex">
+                <button type="button" pButton pRipple icon="pi pi-file" (click)="dt.exportCSV()" class="me-2"
+                  matTooltip="CSV"></button>
+                <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()"
+                  class="p-button-success me-2" matTooltip="Excel"></button>
+                <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdf()"
+                  class="p-button-warning me-2" matTooltip="PDF"></button>
+              </div>
+              <div>
+
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns">
+                  {{ col.header }}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td *ngFor="let col of columns">
+                  {{ rowData[col.field] }}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          <i class="pi pi-calendar me-2" style="font-size: 1.5rem"></i>
+          <span>Citas</span>
+        </ng-template>
+        <div class="card">
+          <p-table #dt2 [columns]="colsCitas" [value]="citaObj" selectionMode="multiple" [(selection)]="selectedCitas"
+            [exportHeader]="'customExportHeader'" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="8"
+            currentPageReportTemplate="{last} de {totalRecords}">
+            <ng-template pTemplate="caption">
+              <div class="flex">
+                <button type="button" pButton pRipple icon="pi pi-file" (click)="dt2.exportCSV()" class="me-2"
+                  matTooltip="CSV"></button>
+                <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcelCT()"
+                  class="p-button-success me-2" matTooltip="Excel"></button>
+                <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdfCT()"
+                  class="p-button-warning me-2" matTooltip="PDF"></button>
+
+              </div>
+              <div>
+
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns">
+                  {{ col.header }}
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData">
+                <td *ngFor="let col of columns">
+                  {{ rowData[col.field] }}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+</div>
