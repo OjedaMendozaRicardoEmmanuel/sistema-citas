@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { format } from 'date-fns';
+import * as moment from 'moment';
 import { MessageService } from 'primeng/api';
 import { forkJoin } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
@@ -16,8 +17,6 @@ import { Usuario } from 'src/app/services/models/usuario';
   providers: [MessageService],
 })
 export class CitasComponent implements OnInit {
-  @ViewChild('dataTable', { static: true }) dataTable: any;
-
   fechaMinima = new Date();
   citas: Cita[] = [];
   Allcitas: Cita[] = [];
@@ -56,16 +55,27 @@ export class CitasComponent implements OnInit {
   citasConfirmadas = 0;
   citasPendientes = 0;
   id_doc = 0;
+  btnIniciar = false;
+  formGroup: FormGroup;
 
   constructor(
     private messageService: MessageService,
     private apiService: ApiService
   ) {
+    this.formGroup = new FormGroup({
+      id: new FormControl(''),
+      motivo: new FormControl('', [Validators.required]),
+      tratamiento: new FormControl(1, [Validators.required]),
+      cita_id: new FormControl(''),
+    });
     setTimeout(() => {
       apiService.getProfile().subscribe((res) => {
         this.usuario = res;
         this.obternerIdDoc(this.usuario);
         this.misPacientes = this.obtenerPacientes();
+        this.citas = this.citas.filter((ct) => ct.doctor_id === this.id_doc);
+        this.proximaCita = this.citas[0];
+        this.obtenerNCitas();
       });
     }, 200);
   }
@@ -88,17 +98,18 @@ export class CitasComponent implements OnInit {
       this.odontologos = odontologos;
       this.usuarios = usuarios;
       this.Allcitas = citas;
-      this.citas = this.ordenarCitasPorFecha(citas.filter((cita) => {
-        const fechaCita = new Date(cita.fecha_hora);
-        return fechaCita > fechaActual;
-      }));
-      this.proximaCita = this.citas[0];
+      this.citas = this.ordenarCitasPorFecha(
+        citas.filter((cita) => {
+          const fechaCita = new Date(cita.fecha_hora);
+          const fechaA = new Date(this.obtenerFechaF(fechaActual));
+          return fechaCita > fechaA;
+        })
+      );
     });
-  }
 
-  // Método para refrescar la tabla
-  refreshTable(): void {
-    this.dataTable.reset();
+    setInterval(() => {
+      this.btnIniciar = this.esFechaPosterior(this.proximaCita.fecha_hora);
+    }, 1000);
   }
 
   optenerUserOdontologo(docs: Doctor[]): Usuario[] {
@@ -128,7 +139,7 @@ export class CitasComponent implements OnInit {
   getSeverity(status: string) {
     switch (status) {
       case '1':
-        return 'info';
+        return 'danger';
       case '2':
         return 'success';
       case '3':
@@ -171,21 +182,6 @@ export class CitasComponent implements OnInit {
     return doc;
   }
 
-  asignarDatosCita(form: FormGroup) {
-    this.cita = {
-      id: form.get('id')?.value,
-      fecha_hora:
-        this.obtenerFechaF(form.get('fecha')?.value) +
-        ' ' +
-        form.get('hora')?.value +
-        ':00',
-      estatus: form.get('estatus')?.value,
-      paciente_id: form.get('paciente_id')?.value,
-      doctor_id: form.get('doctor_id')?.value,
-      usuarios_id: this.usuario.id,
-    };
-  }
-
   obtenerFechaF(fecha: any): string {
     const fechaTemp = new Date(fecha);
     return format(fechaTemp, 'yyyy-MM-dd');
@@ -207,11 +203,11 @@ export class CitasComponent implements OnInit {
     });
   }
 
-  obtenerPacientes():Paciente[]{
-    let px:Paciente[] = [];
-    this.Allcitas.forEach(ct => {
+  obtenerPacientes(): Paciente[] {
+    let px: Paciente[] = [];
+    this.Allcitas.forEach((ct) => {
       if (ct.doctor_id === this.id_doc) {
-        px.push(this.obtenerPacienteCita(ct.paciente_id))
+        px.push(this.obtenerPacienteCita(ct.paciente_id));
       }
     });
     px = px.filter((item, index) => {
@@ -220,12 +216,69 @@ export class CitasComponent implements OnInit {
     return px;
   }
 
-  obternerIdDoc(usr:Usuario){
-    this.odontologos.forEach(res => {
+  obternerIdDoc(usr: Usuario) {
+    this.odontologos.forEach((res) => {
       if (res.usuarios_id === this.usuario.id) {
-        this.id_doc = res.id
+        this.id_doc = res.id;
       }
     });
     console.log(this.id_doc);
+  }
+
+  calcularEdad(fechaNacimiento: string) {
+    const hoy = moment();
+    const edad = hoy.diff(fechaNacimiento, 'years');
+    return edad;
+  }
+
+  obtenerNCitas() {
+    this.citas.forEach((ct) => {
+      if (ct.estatus == 1) {
+        this.citasPendientes++;
+      } else if (ct.estatus == 2) {
+        this.citasConfirmadas++;
+      }
+    });
+  }
+
+  esFechaPosterior(fechaCitaAnterior: string): boolean {
+    const fechaCitaAnteriorObj = new Date(fechaCitaAnterior);
+    const fechaActual = new Date();
+
+    return fechaActual > fechaCitaAnteriorObj;
+  }
+
+  verDialog = false;
+  iniciarCita(ct: Cita) {
+    this.verDialog = true;
+  }
+
+  guardar() {
+    this.formGroup.get('cita_id')?.setValue(this.proximaCita.id);
+    if (this.formGroup.valid) {
+      this.apiService
+        .createExpediente(this.formGroup.value)
+        .subscribe((res) => {
+          this.verDialog = false;
+          this.formGroup.reset();
+          this.btnIniciar = true;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Se agrego el expediente a la cita',
+            detail: 'EXP-'+res.id,
+          });
+        });
+    } else {
+      this.messageService.add({
+        severity: 'Error',
+        summary: 'Error al registrar expediente',
+        detail: 'Por favor ingrese todos los datos!',
+      });
+    }
+  }
+
+  cancelar() {
+    this.verDialog = false;
+    this.formGroup.reset();
   }
 }

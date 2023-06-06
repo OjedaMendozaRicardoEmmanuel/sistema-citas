@@ -42,7 +42,8 @@
             <div class="d-flex flex-row">
               <p class="me-4"><b>ID:</b> CT-{{proximaCita.id}}</p>
               <p class="me-4"><b>Fecha:</b> {{proximaCita.fecha_hora}}</p>
-              <p><b>Estatus:</b> {{getEstatus('' + proximaCita.estatus)}}</p>
+              <p><b>Estatus: </b>  <span class="text-{{getSeverity('' + proximaCita.estatus)}}">{{getEstatus('' +
+                proximaCita.estatus)}}</span></p>
             </div>
             <div class="d-flex flex-row">
               <p class="me-4"><b>Paciente:</b>
@@ -50,37 +51,76 @@
               </p>
             </div>
           </div>
+          <div class="ms-4">
+            <button pButton pRipple icon="pi pi-check" label="Iniciar Cita" class="p-button-success"
+              [disabled]="!btnIniciar" (click)="iniciarCita(proximaCita)"></button>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
   </div>
   <div class="card w-100 card-2 shadow p-4 d-flex flex-row mt-4">
-    <div class="position-relative w-50 h-100 p-2">
-      <mat-card class="w-100 h-100 border">
-        <mat-card-header class="fs-3 border-bottom">
-          <mat-card-title class="text-center">
-            <i class="bi bi-people-fill"></i>
-            Mis Pacientes
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="fs-4 row mt-3">
-          <div *ngFor="let px of misPacientes" class="border">
-            <p>{{nombreFormato(px)}}</p>
-          </div>
-        </mat-card-content>
-      </mat-card>
+    <div class="position-relative w-25 h-100 p-2 card me-4">
+      <div class="w-100 display-6 d-flex" style="height: 10%;">
+        <p>
+          <i class="bi bi-people-fill"></i>
+          Mis Pacientes
+        </p>
+      </div>
+      <div class="w-100 overflow-scroll" style="height: 90%;">
+        <p-accordion>
+          <p-accordionTab *ngFor="let px of misPacientes" header="{{nombreFormato(px)}}">
+            <div>
+              <p><b>ID:</b> PX-{{px.id}}</p>
+              <p><b>Genero:</b> {{px.genero}}</p>
+              <p><b>Fecha Nacimiento:</b> {{px.fecha_nacimiento}}</p>
+              <p><b>Edad:</b> {{calcularEdad(px.fecha_nacimiento)}}</p>
+              <p><b>Correo:</b> {{px.correo}}</p>
+              <p><b>Telefono:</b> {{px.telefono}}</p>
+            </div>
+          </p-accordionTab>
+        </p-accordion>
+      </div>
     </div>
-    <div class="position-relative w-50 h-100 p-2">
-      <mat-card class="w-100 h-100 border">
-        <mat-card-header class="fs-3 border-bottom">
-          <mat-card-title class="text-center">
-            <i class="bi bi-calendar-minus-fill"></i>
-            Citas
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="fs-4 d-flex flex-row mt-3">
-        </mat-card-content>
-      </mat-card>
+    <div class="position-relative w-75 h-100 p-2 card">
+      <div class="w-100 display-6 d-flex" style="height: 10%;">
+        <p>
+          <i class="bi bi-calendar-minus-fill"></i>
+          Citas Programadas
+        </p>
+      </div>
+      <div class="w-100 overflow-scroll" style="height: 90%;">
+        <p-accordion [activeIndex]="0">
+          <p-accordionTab *ngFor="let ct of citas" header="ID: CT-{{ct.id}}">
+            <p><b>Fecha:</b> {{ct.fecha_hora}}</p>
+            <p><b>Estatus: </b> <span class="text-{{getSeverity('' + ct.estatus)}}">{{getEstatus('' +
+                ct.estatus)}}</span></p>
+            <p><b>Paciente:</b>
+              {{nombreFormato(obtenerPacienteCita(ct.paciente_id))}}
+            </p>
+          </p-accordionTab>
+        </p-accordion>
+      </div>
     </div>
   </div>
 </div>
+<p-dialog [(visible)]="verDialog" [style]="{width: '30%', height: '50%%'}" header="Expediente de la cita" [modal]="true"
+  class="p-fluid">
+  <form #formulario [formGroup]="formGroup">
+    <mat-form-field class="w-100">
+      <mat-label>Motivo</mat-label>
+      <textarea matInput formControlName="motivo"></textarea>
+    </mat-form-field>
+    <div class="w-100 my-2">
+      <label id="radio-group">Tratamiento:</label>
+      <mat-radio-group formControlName="tratamiento" id="radio-group">
+        <mat-radio-button value=1>No</mat-radio-button>
+        <mat-radio-button value=2>Si</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="w-75 mt-2">
+      <button type="submit" class="btn btn-primary me-2" (click)="guardar()">Guardar</button>
+      <button type="button" class="btn btn-danger" (click)="cancelar()">Cancelar</button>
+    </div>
+  </form>
+</p-dialog>

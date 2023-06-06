@@ -11,6 +11,9 @@ import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { TagModule } from 'primeng/tag';
 import { TabViewModule } from 'primeng/tabview';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { AccordionModule } from 'primeng/accordion';
+import { CardModule } from 'primeng/card';
 
 //AngularMaterial
 import { MatButtonModule } from '@angular/material/button';
@@ -61,6 +64,9 @@ import {MatCardModule} from '@angular/material/card';
     TabViewModule,
     MatTabsModule,
     MatCardModule,
+    ScrollPanelModule,
+    AccordionModule,
+    CardModule,
   ],
   exports: [
     InputTextModule,
@@ -91,6 +97,9 @@ import {MatCardModule} from '@angular/material/card';
     TabViewModule,
     MatTabsModule,
     MatCardModule,
+    ScrollPanelModule,
+    AccordionModule,
+    CardModule,
   ],
 })
 export class MaterialModule {}

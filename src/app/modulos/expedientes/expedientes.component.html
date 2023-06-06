@@ -1,26 +1,33 @@
 <div class="d-flex justify-content-center align-content-center fondo flex-row p-5">
-  <div class="card w-25 h-100 shadow p-4 d-flex flex-row me-3">
-    <mat-card class="w-100 h-100 border">
-      <mat-card-header class="fs-3 border-bottom">
-        <mat-card-title class="text-center">
-          <i class="bi bi-person-fill"></i>
-          Pacientes
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content class="fs-4 d-flex flex-row mt-3">
-      </mat-card-content>
-    </mat-card>
+  <div class="position-relative w-25 h-100 p-2 card me-4">
+    <div class="w-100 display-6 d-flex" style="height: 10%;">
+      <p>
+        <i class="bi bi-people-fill"></i>
+        Pacientes
+      </p>
+    </div>
+    <div class="w-100 overflow-scroll" style="height: 90%;">
+    <button mat-flat-button extended color="primary" *ngFor="let px of misPacientes" class="w-100 mb-3 fs-4"  (click)="verHistorial(px)">
+      {{nombreFormato(px)}}
+    </button>
+    </div>
   </div>
-  <div class="card w-75 h-100 shadow p-4 d-flex flex-row">
-    <mat-card class="w-100 h-100 border">
-      <mat-card-header class="fs-3 border-bottom">
-        <mat-card-title class="text-center">
-          <i class="bi bi-folder-fill"></i>
-          Historial Clínico
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content class="fs-4 d-flex flex-row mt-3">
-      </mat-card-content>
-    </mat-card>
+  <div class="position-relative w-75 h-100 p-2 card">
+    <div class="w-100 display-6 d-flex" style="height: 10%;">
+      <p>
+        <i class="bi bi-folder-fill"></i>
+        Historial Clínico
+      </p>
+    </div>
+    <div class="w-100 overflow-scroll" style="height: 90%;">
+      <p-accordion [activeIndex]="0">
+        <p-accordionTab  *ngFor="let exp of expedientesPX" header="ID: EXP-{{exp.id}}">
+          <p><b>Cita ID:</b> CT-{{exp.cita_id}}</p>
+          <p><b>Motivo:</b> {{exp.motivo}}</p>
+          <p><b>Tratamiento:</b> {{exp.tratamiento==1 ? 'No' : 'Si'}}</p>
+        </p-accordionTab>
+      </p-accordion>
+    </div>
   </div>
 </div>
+
