@@ -26,16 +26,16 @@ export class GestionCitasComponent implements OnInit {
   pacientes: Paciente[] = [];
   usuarios: Usuario[] = [];
   horas: any[] = [
-    {hora:'08:00', enable:true},
-    {hora:'09:00', enable:true},
-    {hora:'10:00', enable:true},
-    {hora:'11:00', enable:true},
-    {hora:'12:00', enable:true},
-    {hora:'13:00', enable:true},
-    {hora:'14:00', enable:true},
-    {hora:'15:00', enable:true},
-    {hora:'16:00', enable:true},
-    {hora:'17:00', enable:true},
+    { hora: '08:00', enable: true },
+    { hora: '09:00', enable: true },
+    { hora: '10:00', enable: true },
+    { hora: '11:00', enable: true },
+    { hora: '12:00', enable: true },
+    { hora: '13:00', enable: true },
+    { hora: '14:00', enable: true },
+    { hora: '15:00', enable: true },
+    { hora: '16:00', enable: true },
+    { hora: '17:00', enable: true },
   ];
   horaSeleccionada: string = '';
   usuario: Usuario = {
@@ -192,31 +192,35 @@ export class GestionCitasComponent implements OnInit {
   }
 
   guardar() {
-    this.asignarDatosCita(this.formGroup);
-    if (this.formGroup.valid && !this.existeFechaHora(this.cita)) {
-      if (this.editar) {
+    if (this.formGroup.valid) {
+      this.asignarDatosCita(this.formGroup);
+      if (this.existeFechaHora(this.cita)) {
+        alert(`La fecha: ${this.cita.fecha_hora} no esta disponible`);
+      } else if (this.editar) {
         this.updateCita(this.cita);
         this.messageService.add({
           severity: 'info',
           summary: 'Se modifico la cita!',
-          detail: 'ID: CT-'+this.cita.id,
+          detail: 'ID: CT-' + this.cita.id,
         });
       } else {
         this.crearCita();
       }
       this.dataTable.reset();
     } else {
-      alert(`La fecha: ${this.cita.fecha_hora} no esta disponible`);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error al guardar',
+        detail: 'Por favor ingrese todos los datos!',
+      });
     }
   }
 
   cancelar() {
     this.editar = false;
-    this.horas.forEach(
-      h => {
-        h.enable = true;
-      }
-    );
+    this.horas.forEach((h) => {
+      h.enable = true;
+    });
     this.formGroup.reset();
     this.formulario.reset();
   }
@@ -254,7 +258,7 @@ export class GestionCitasComponent implements OnInit {
       this.messageService.add({
         severity: 'success',
         summary: 'Se agrego una nueva cita!',
-        detail: 'ID: CT-'+res.id,
+        detail: 'ID: CT-' + res.id,
       });
     });
   }
@@ -271,11 +275,11 @@ export class GestionCitasComponent implements OnInit {
     if (confirm(`Desea cancelar la cita ${cita.fecha_hora}?`)) {
       cita.estatus = 3;
       this.updateCita(cita);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Se cancelo la cita!',
-          detail: 'ID: CT-'+cita.id,
-        });
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Se cancelo la cita!',
+        detail: 'ID: CT-' + cita.id,
+      });
     }
   }
 
@@ -283,11 +287,11 @@ export class GestionCitasComponent implements OnInit {
     if (confirm(`Desea confirmar la cita con id: CT-${cita.id}?`)) {
       cita.estatus = 2;
       this.updateCita(cita);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Se confirmo la cita!',
-          detail: 'ID: CT-'+cita.id,
-        });
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Se confirmo la cita!',
+        detail: 'ID: CT-' + cita.id,
+      });
     }
   }
 
@@ -311,13 +315,13 @@ export class GestionCitasComponent implements OnInit {
     return this.citas.some((cita) => cita.fecha_hora === citaN.fecha_hora);
   }
 
-  onFechaSeleccionada(event: any){
+  onFechaSeleccionada(event: any) {
     const fecha = this.obtenerFechaF(this.formGroup.get('fecha')?.value);
-    const citas = this.citas.filter( (ct) => fecha === this.obtenerFechaF(ct.fecha_hora));
-    this.horas.forEach(
-      h => {
-        h.enable = !citas.some(ct => ct.fecha_hora.substring(11, 16) == h.hora);
-      }
+    const citas = this.citas.filter(
+      (ct) => fecha === this.obtenerFechaF(ct.fecha_hora)
     );
+    this.horas.forEach((h) => {
+      h.enable = !citas.some((ct) => ct.fecha_hora.substring(11, 16) == h.hora);
+    });
   }
 }

@@ -15,14 +15,15 @@ import { Usuario } from 'src/app/services/models/usuario';
   styleUrls: ['./citas.component.css'],
   providers: [MessageService],
 })
-export class CitasComponent  implements OnInit {
-
+export class CitasComponent implements OnInit {
   @ViewChild('dataTable', { static: true }) dataTable: any;
 
   fechaMinima = new Date();
   citas: Cita[] = [];
+  Allcitas: Cita[] = [];
   odontologos: Doctor[] = [];
   pacientes: Paciente[] = [];
+  misPacientes: Paciente[] = [];
   usuarios: Usuario[] = [];
   usuario: Usuario = {
     id: 0,
@@ -54,6 +55,7 @@ export class CitasComponent  implements OnInit {
 
   citasConfirmadas = 0;
   citasPendientes = 0;
+  id_doc = 0;
 
   constructor(
     private messageService: MessageService,
@@ -62,11 +64,15 @@ export class CitasComponent  implements OnInit {
     setTimeout(() => {
       apiService.getProfile().subscribe((res) => {
         this.usuario = res;
+        this.obternerIdDoc(this.usuario);
+        this.misPacientes = this.obtenerPacientes();
       });
     }, 200);
   }
 
   ngOnInit(): void {
+    const fechaActual = new Date();
+
     const getCitas$ = this.apiService.getAllCitas();
     const getAllPacientes$ = this.apiService.getAllPacientes();
     const getAllDoctors$ = this.apiService.getAllDoctors();
@@ -78,10 +84,15 @@ export class CitasComponent  implements OnInit {
       getAllDoctors$,
       getUsuarios$,
     ]).subscribe(([citas, pacientes, odontologos, usuarios]) => {
-      this.citas = citas;
       this.pacientes = pacientes;
       this.odontologos = odontologos;
       this.usuarios = usuarios;
+      this.Allcitas = citas;
+      this.citas = this.ordenarCitasPorFecha(citas.filter((cita) => {
+        const fechaCita = new Date(cita.fecha_hora);
+        return fechaCita > fechaActual;
+      }));
+      this.proximaCita = this.citas[0];
     });
   }
 
@@ -101,7 +112,7 @@ export class CitasComponent  implements OnInit {
   }
 
   nombreFormato(item: any): string {
-    return `${item.nombre} ${item.apellidop} ${item.apellidom}`;
+    return `${item?.nombre} ${item?.apellidop} ${item?.apellidom}`;
   }
 
   optenerUserDeOdontologo(doc: Doctor): any {
@@ -196,4 +207,25 @@ export class CitasComponent  implements OnInit {
     });
   }
 
+  obtenerPacientes():Paciente[]{
+    let px:Paciente[] = [];
+    this.Allcitas.forEach(ct => {
+      if (ct.doctor_id === this.id_doc) {
+        px.push(this.obtenerPacienteCita(ct.paciente_id))
+      }
+    });
+    px = px.filter((item, index) => {
+      return px.indexOf(item) === index;
+    });
+    return px;
+  }
+
+  obternerIdDoc(usr:Usuario){
+    this.odontologos.forEach(res => {
+      if (res.usuarios_id === this.usuario.id) {
+        this.id_doc = res.id
+      }
+    });
+    console.log(this.id_doc);
+  }
 }

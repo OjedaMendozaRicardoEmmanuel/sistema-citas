@@ -75,6 +75,12 @@ export class PacientesComponent {
           detail: 'PX-'+res.id,
         });
       });
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error al guardar',
+        detail: 'Por favor ingrese todos los datos!',
+      });
     }
   }
 
@@ -89,6 +95,12 @@ export class PacientesComponent {
     if (this.formGroup.valid) {
       this.updatePX(this.formGroup.value);
       this.modificarDialog = false;
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error al guardar',
+        detail: 'Por favor ingrese todos los datos!',
+      });
     }
   }
 

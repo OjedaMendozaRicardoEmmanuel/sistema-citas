@@ -84,6 +84,12 @@ export class PersonalComponent implements OnInit {
           detail: 'ID: PER-'+res.id,
         });
       });
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error al guardar',
+        detail: 'Por favor ingrese todos los datos!',
+      });
     }
   }
 
@@ -91,6 +97,12 @@ export class PersonalComponent implements OnInit {
     if (this.formGroup.valid) {
       this.updateUser(this.formGroup.value);
       this.modificarDialog = false;
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error al guardar',
+        detail: 'Por favor ingrese todos los datos!',
+      });
     }
   }
 

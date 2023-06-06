@@ -68,6 +68,12 @@ export class OdontologosComponent {
         this.agregarOdo(res.id)
         this.agregarDialog = false;
       });
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error al guardar',
+        detail: 'Por favor ingrese todos los datos!',
+      });
     }
   }
 
@@ -75,6 +81,12 @@ export class OdontologosComponent {
     if (this.formGroup.valid) {
       this.updateUser(this.formGroup.value);
       this.modificarDialog = false;
+    }  else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error al guardar',
+        detail: 'Por favor ingrese todos los datos!',
+      });
     }
   }
 
