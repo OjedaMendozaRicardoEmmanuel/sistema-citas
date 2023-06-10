@@ -7,10 +7,9 @@
           <span>Pacientes</span>
         </ng-template>
         <div class="card">
-          <p-table #dt [columns]="colsPacientes" [value]="pacientes" selectionMode="multiple"
-            [(selection)]="selectedPacientes" [exportHeader]="'customExportHeader'"
-            [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="8"
-            currentPageReportTemplate="{last} de {totalRecords}">
+          <p-table #dt [columns]="colsPacientes" [value]="pacientes" [exportHeader]="'customExportHeader'"
+            [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="8"  [showCurrentPageReport]="true"
+            currentPageReportTemplate="Pacientes {last} de {totalRecords}">
             <ng-template pTemplate="caption">
               <div class="flex">
                 <button type="button" pButton pRipple icon="pi pi-file" (click)="dt.exportCSV()" class="me-2"
@@ -42,14 +41,52 @@
         </div>
       </p-tabPanel>
       <p-tabPanel>
+        <form [formGroup]="range">
+          <p class="mb-0">Filtros:</p>
+          <mat-form-field>
+            <mat-label>Rango</mat-label>
+            <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+              <input matStartDate formControlName="start" placeholder="Inicio">
+              <input matEndDate formControlName="end" placeholder="Fin">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+          <mat-form-field class="m-2 w-25">
+            <mat-label>Paciente</mat-label>
+            <mat-select formControlName="paciente">
+              <mat-option *ngFor="let paciente of pacientes" [value]="nombreFormato(paciente)">
+                {{nombreFormato(paciente)}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="m-2 w-25">
+            <mat-label>Odontólogo</mat-label>
+            <mat-select formControlName="doctor">
+              <mat-option *ngFor="let doc of odontologos" [value]="nombreFormato(optenerUserDeOdontologo(doc))">
+                {{nombreFormato(optenerUserDeOdontologo(doc))}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Estatus</mat-label>
+            <mat-select formControlName="estatus">
+              <mat-option *ngFor="let estatus of filtroEstatus" [value]="estatus.estatus">{{ estatus.estatus }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <p-button icon="pi pi-check" styleClass="p-button-rounded p-button-success mb-5 ms-4"
+          matTooltip="Aplicar Filtros" (onClick)="filtrarCitas()"></p-button>
+          <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-danger mb-5 ms-2"
+          matTooltip="Borrar Filtros" (onClick)="borrarFiltros()"></p-button>
+        </form>
         <ng-template pTemplate="header">
           <i class="pi pi-calendar me-2" style="font-size: 1.5rem"></i>
           <span>Citas</span>
         </ng-template>
         <div class="card">
-          <p-table #dt2 [columns]="colsCitas" [value]="citaObj" selectionMode="multiple" [(selection)]="selectedCitas"
-            [exportHeader]="'customExportHeader'" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="8"
-            currentPageReportTemplate="{last} de {totalRecords}">
+          <p-table #dt2 [columns]="colsCitas" [value]="citaObj" [exportHeader]="'customExportHeader'"
+            [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="7" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Citas {last} de {totalRecords}">
             <ng-template pTemplate="caption">
               <div class="flex">
                 <button type="button" pButton pRipple icon="pi pi-file" (click)="dt2.exportCSV()" class="me-2"
@@ -58,10 +95,7 @@
                   class="p-button-success me-2" matTooltip="Excel"></button>
                 <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdfCT()"
                   class="p-button-warning me-2" matTooltip="PDF"></button>
-
-              </div>
-              <div>
-
+              <p class="d-inline-block fs-3"><b>Total: </b> {{citaObj.length}}</p>
               </div>
             </ng-template>
             <ng-template pTemplate="header" let-columns>

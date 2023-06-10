@@ -194,19 +194,27 @@ export class GestionCitasComponent implements OnInit {
   guardar() {
     if (this.formGroup.valid) {
       this.asignarDatosCita(this.formGroup);
+      console.log(this.existeFechaHora(this.cita));
       if (this.existeFechaHora(this.cita)) {
-        alert(`La fecha: ${this.cita.fecha_hora} no esta disponible`);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error al guardar',
+          detail: `La Fecha: ${this.cita.fecha_hora} \nOdontólogo: ${this.nombreFormato(this.obtenerOdonCita(this.cita.doctor_id))}\nNo esta disponible!`,
+        });
       } else if (this.editar) {
         this.updateCita(this.cita);
         this.messageService.add({
-          severity: 'info',
+          severity: 'success',
           summary: 'Se modifico la cita!',
           detail: 'ID: CT-' + this.cita.id,
         });
+        this.dataTable.reset();
+        this.formGroup.reset();
       } else {
         this.crearCita();
+        this.dataTable.reset();
+        this.formGroup.reset();
       }
-      this.dataTable.reset();
     } else {
       this.messageService.add({
         severity: 'error',
@@ -272,13 +280,24 @@ export class GestionCitasComponent implements OnInit {
   }
 
   deleteCita(cita: Cita) {
-    if (confirm(`Desea cancelar la cita ${cita.fecha_hora}?`)) {
+    const clave = prompt(
+        `Para cancelar la cita ingrese la clave del Administrador:\nID: CT-${cita.id} Fecha: ${cita.fecha_hora}`
+        +`\nPaciente: ${this.nombreFormato(this.obtenerPacienteCita(cita.paciente_id))}`
+        +`\nOdontólogo${this.nombreFormato(this.obtenerOdonCita(cita.doctor_id))}`
+      );
+    if (clave === 'masterkey') {
       cita.estatus = 3;
       this.updateCita(cita);
       this.messageService.add({
         severity: 'error',
         summary: 'Se cancelo la cita!',
         detail: 'ID: CT-' + cita.id,
+      });
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Clave incorrecta',
+        detail: 'La clave del adminitrador es incorrecta!',
       });
     }
   }
@@ -312,7 +331,11 @@ export class GestionCitasComponent implements OnInit {
   }
 
   existeFechaHora(citaN: Cita): boolean {
-    return this.citas.some((cita) => cita.fecha_hora === citaN.fecha_hora);
+    return this.citas.some((cita) => cita.fecha_hora === citaN.fecha_hora && cita.doctor_id === citaN.doctor_id);
+  }
+
+  existeCitaOdo(citaN: Cita): boolean {
+    return this.citas.some((cita) => cita.fecha_hora === citaN.fecha_hora && cita.paciente_id === citaN.paciente_id);
   }
 
   onFechaSeleccionada(event: any) {
@@ -324,4 +347,12 @@ export class GestionCitasComponent implements OnInit {
       h.enable = !citas.some((ct) => ct.fecha_hora.substring(11, 16) == h.hora);
     });
   }
+
+  dateFilter: (date: Date | null) => boolean = (date: Date | null) => {
+    if (!date) {
+      return false;
+    }
+    const day = date.getDay();
+    return day !== 0; // 1 means monday, 0 means sunday, etc.
+  };
 }

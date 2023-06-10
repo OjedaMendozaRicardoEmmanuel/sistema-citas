@@ -3,12 +3,6 @@
     <div class="p-toolbar-group-start">
       <p-button label="Agregar" icon="pi pi-plus" class="mr-2" (onClick)="agregarUsuario()"></p-button>
     </div>
-    <div class="p-toolbar-group-end">
-      <div class="p-inputgroup">
-        <input type="text" pInputText placeholder="Buscar" />
-        <button type="button" pButton icon="pi pi-search" styleClass="p-button-danger"></button>
-      </div>
-    </div>
   </p-toolbar>
 
   <div class="card rounded d-flex justify-content-center align-items-center shadow">
@@ -18,7 +12,7 @@
         <tr>
           <th>ID</th>
           <th>Nombre</th>
-          <th>Apellidos</th>
+          <th>Apellido(s)</th>
           <th>Email</th>
           <th>Género</th>
           <th>Estatus</th>
@@ -70,11 +64,16 @@
       </mat-form-field>
       <mat-form-field class="w-100">
         <mat-label>Password</mat-label>
-        <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+        <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" (input)="validarContra()">
         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
           [attr.aria-pressed]="hide">
           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
+        <div *ngIf="contraValida">
+          <mat-error>
+            La contraseña debe tener entre 8 y 15 caracteres, una letra mayúscula, un número y caracteres especiales.
+          </mat-error>
+        </div>
       </mat-form-field>
       <div class="w-100 my-2">
         <label id="radio-group">Género:</label>
@@ -89,9 +88,12 @@
       </div>
     </form>
   </p-dialog>
-  <p-dialog [(visible)]="modificarDialog" [style]="{width: '30%', height: '70%'}" header="Modificar Personal"
+  <p-dialog [(visible)]="modificarDialog" [style]="{width: '30%', height: '78%'}" header="Modificar Personal"
     [modal]="true" class="p-fluid">
     <form #formulario [formGroup]="formGroup">
+       <div class="w-100 ms-2">
+        <p><b>ID:</b> PER-{{formGroup.get('id')?.value}}</p>
+      </div>
       <mat-form-field class="w-100">
         <mat-label>Nombre</mat-label>
         <input matInput formControlName="nombre" onkeydown="return /[a-zA-ZñÑá-úÁ-Ú, ]/i.test(event.key)">
@@ -111,6 +113,7 @@
       <mat-form-field class="w-100">
         <mat-label>Password</mat-label>
         <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+        <mat-hint>Include area code</mat-hint>
         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
           [attr.aria-pressed]="hide">
           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>

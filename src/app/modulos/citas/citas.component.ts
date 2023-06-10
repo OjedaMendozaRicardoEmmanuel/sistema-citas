@@ -101,7 +101,8 @@ export class CitasComponent implements OnInit {
       this.citas = this.ordenarCitasPorFecha(
         citas.filter((cita) => {
           const fechaCita = new Date(cita.fecha_hora);
-          const fechaA = new Date(this.obtenerFechaF(fechaActual));
+          const fechaA = new Date(this.obtenerFechaFHrs(fechaActual));
+          console.log(cita.id, fechaCita > fechaA);
           return fechaCita > fechaA;
         })
       );
@@ -185,6 +186,11 @@ export class CitasComponent implements OnInit {
   obtenerFechaF(fecha: any): string {
     const fechaTemp = new Date(fecha);
     return format(fechaTemp, 'yyyy-MM-dd');
+  }
+
+  obtenerFechaFHrs(fecha: any): string {
+    const fechaTemp = new Date(fecha);
+    return format(fechaTemp, 'yyyy-MM-dd HH:00');
   }
 
   ordenarCitasPorFecha(citas: Cita[]): Cita[] {

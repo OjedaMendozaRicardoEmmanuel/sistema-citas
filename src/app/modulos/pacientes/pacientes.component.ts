@@ -32,7 +32,7 @@ export class PacientesComponent {
       id: new FormControl(''),
       nombre: new FormControl('', [Validators.required]),
       apellidop: new FormControl('', [Validators.required]),
-      apellidom: new FormControl(''),
+      apellidom: new FormControl(' '),
       genero: new FormControl('', [Validators.required]),
       fecha_nacimiento: new FormControl('', [Validators.required]),
       correo: new FormControl('', [Validators.required, Validators.email]),
@@ -132,7 +132,7 @@ export class PacientesComponent {
       const index = this.pacientes.findIndex((u) => u.id === updatedUser.id);
       this.pacientes[index] = updatedUser;
       this.messageService.add({
-        severity: 'info',
+        severity: 'success',
         summary: 'Se actualizaron los datos',
         detail: 'PX-'+updatedUser.id,
       });
@@ -143,7 +143,7 @@ export class PacientesComponent {
     this.apiService.deletePaciente(px.id).subscribe(() => {
       this.pacientes = this.pacientes.filter((u) => u.id !== px.id);
       this.messageService.add({
-        severity: 'warn',
+        severity: 'error',
         summary: 'Eliminado correctamente',
         detail: 'PX-'+px.id,
       });

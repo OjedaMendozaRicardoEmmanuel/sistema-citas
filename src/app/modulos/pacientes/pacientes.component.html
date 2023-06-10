@@ -3,12 +3,6 @@
     <div class="p-toolbar-group-start">
       <p-button label="Agregar" icon="pi pi-plus" class="mr-2" (onClick)="mostrarAgregar()"></p-button>
     </div>
-    <div class="p-toolbar-group-end">
-      <div class="p-inputgroup">
-        <input type="text" pInputText placeholder="Buscar" />
-        <button type="button" pButton icon="pi pi-search" styleClass="p-button-danger"></button>
-      </div>
-    </div>
   </p-toolbar>
   <div class="card rounded d-flex justify-content-center align-items-center shadow">
     <p-toast position="top-center" class="rounded"></p-toast>
@@ -18,7 +12,7 @@
         <tr>
           <th>ID</th>
           <th>Nombre</th>
-          <th>Apellidos</th>
+          <th>Apellido(s)</th>
           <th>Fecha De Nacimiento</th>
           <th>Edad</th>
           <th>Género</th>
@@ -90,9 +84,12 @@
       </div>
     </form>
   </p-dialog>
-  <p-dialog [(visible)]="modificarDialog" [style]="{width: '30%', height: '80%'}" header="Modificar paciente"
+  <p-dialog [(visible)]="modificarDialog" [style]="{width: '30%', height: '88%'}" header="Modificar paciente"
     [modal]="true" class="p-fluid">
     <form #formulario [formGroup]="formGroup">
+      <div class="w-100 ms-2">
+        <p><b>ID:</b> PX-{{formGroup.get('id')?.value}}</p>
+      </div>
       <mat-form-field class="w-100">
         <mat-label>Nombre</mat-label>
         <input matInput formControlName="nombre">

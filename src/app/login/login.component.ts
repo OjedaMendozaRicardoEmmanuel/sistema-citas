@@ -3,11 +3,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Usuario } from '../services/models/usuario';
 import { ApiService } from '../services/api.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
+  providers: [MessageService],
 })
 export class LoginComponent implements OnInit {
 
@@ -29,6 +31,7 @@ export class LoginComponent implements OnInit {
   invalid = '';
 
   constructor(
+    private messageService: MessageService,
     private apiService:ApiService,
     private router: Router
   ) {
@@ -53,9 +56,19 @@ export class LoginComponent implements OnInit {
           this.router.navigate([`panel`]);
         },
         (err) => {
-          alert(`usuario o contraseña incorrectos`);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error al iniciar sesión',
+            detail: 'usuario o contraseña incorrectos',
+          });
         }
       );
+    }  else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error al iniciar sesión',
+        detail: 'Por favor ingrese todos los datos!',
+      });
     }
   }
   registro() {

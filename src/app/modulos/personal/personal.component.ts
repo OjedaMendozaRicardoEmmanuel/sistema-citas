@@ -37,10 +37,11 @@ export class PersonalComponent implements OnInit {
       id: new FormControl(0),
       nombre: new FormControl('', [Validators.required]),
       apellidop: new FormControl('', [Validators.required]),
-      apellidom: new FormControl(''),
+      apellidom: new FormControl(' '),
       email: new FormControl('', [Validators.required, Validators.email]),
       genero: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(15),
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/)]),
       estado: new FormControl(1),
     });
   }
@@ -116,7 +117,7 @@ export class PersonalComponent implements OnInit {
       this.apiService.deleteUsuario(personal.id).subscribe(() => {
         this.personal = this.personal.filter((u) => u.id !== personal.id);
         this.messageService.add({
-          severity: 'warn',
+          severity: 'error',
           summary: 'Eliminado correctamente',
           detail: 'ID: PER-'+personal.id,
         });
@@ -152,7 +153,7 @@ export class PersonalComponent implements OnInit {
       const index = this.personal.findIndex(u => u.id === updatedUser.id);
       this.personal[index] = updatedUser;
       this.messageService.add({
-        severity: 'info',
+        severity: 'success',
         summary: 'Se actualizaron los datos',
         detail: 'ID: PER-'+updatedUser.id,
       });
@@ -165,6 +166,14 @@ export class PersonalComponent implements OnInit {
     const emailRegistrado = this.personal.some(persona => persona.email === email);
     this.emailExiste = emailRegistrado;
   }
+
+  contraValida:boolean = true;
+  validarContra(){
+    if (this.formGroup.get('password')?.valid) {
+      this.contraValida = false;
+    }
+  }
+
 
 
 }
